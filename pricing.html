@@ -4,33 +4,53 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pricing — catool.co.in</title>
-  <meta name="description" content="₹149/month flat. 14-day free trial. Cancel any time." />
+  <meta name="description" content="₹149/mo for one PC. ₹499/mo for the whole office. 14-day free trial. Cancel any time from UPI." />
   <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
 <header class="site-header"><div class="inner"><a class="brand" href="/">ca<span class="dot">tool</span>.co.in</a><nav class="nav"><a href="/#products">Products</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a class="btn btn-primary" href="/pricing.html">Get started</a></nav></div></header>
 
 <section class="s">
-  <h2>Simple pricing</h2>
-  <p class="lead">One price, one tool, no surprises.</p>
+  <h2>Two simple plans</h2>
+  <p class="lead">Start with the 14-day free trial. Pick a plan when you decide to keep using it. Cancel any time from your UPI app — no support call required.</p>
 
-  <div class="pricing-card">
-    <div style="font-size:14px;color:#475569;margin-bottom:6px">26AS / AIS / TIS Downloader</div>
-    <div class="price-main">₹149<span class="per"> / month</span></div>
-    <ul>
-      <li>14-day free trial — no card needed</li>
-      <li>Unlimited assessees</li>
-      <li>26AS + AIS + TIS + Intimation downloads</li>
-      <li>Partywise + sectionwise Excel</li>
-      <li>Refund + 244A interest extraction</li>
-      <li>Auto-updates when the IT portal changes</li>
-      <li>Email + phone support from the developer</li>
-      <li>Cancel any time from your UPI app</li>
-    </ul>
-    <a class="btn btn-primary btn-lg" href="/subscribe.html" style="width:100%">Subscribe ₹149/mo</a>
-    <p style="font-size:12.5px;color:#64748b;margin-top:14px;margin-bottom:0">
-      Billed monthly via UPI AutoPay through Razorpay. GST extra where applicable.
-    </p>
+  <div class="pricing-grid">
+    <!-- Single tier -->
+    <div class="pricing-card">
+      <div class="tier-label">Single PC</div>
+      <div class="price-main">₹149<span class="per"> / month</span></div>
+      <p class="tier-sub">For solo CAs and freelancers.</p>
+      <ul>
+        <li>14-day free trial — no card needed</li>
+        <li><b>1 PC</b> (bound to device)</li>
+        <li>Unlimited assessees</li>
+        <li>26AS + AIS + TIS + Intimation downloads</li>
+        <li>Partywise + sectionwise Excel</li>
+        <li>Refund + 244A interest extraction</li>
+        <li>Email + phone support</li>
+        <li>Cancel any time from your UPI app</li>
+      </ul>
+      <a class="btn btn-primary btn-lg" href="/subscribe.html?tier=single" style="width:100%">Subscribe ₹149/mo</a>
+      <p class="tier-foot">UPI AutoPay via Razorpay. GST extra where applicable.</p>
+    </div>
+
+    <!-- Firm tier -->
+    <div class="pricing-card pricing-card-featured">
+      <div class="ribbon">Best for firms</div>
+      <div class="tier-label">Firm — Whole Office</div>
+      <div class="price-main">₹499<span class="per"> / month</span></div>
+      <p class="tier-sub">For partner firms with multiple staff working in parallel.</p>
+      <ul>
+        <li>Everything in Single PC, plus:</li>
+        <li><b>Unlimited PCs</b> within your office LAN</li>
+        <li>Bound to your office router (not to a specific PC)</li>
+        <li>Staff working from home through office VPN included</li>
+        <li>Re-link in one click if your ISP changes IP</li>
+        <li>Priority email support</li>
+      </ul>
+      <a class="btn btn-primary btn-lg" href="/subscribe.html?tier=firm" style="width:100%">Subscribe ₹499/mo</a>
+      <p class="tier-foot">UPI AutoPay via Razorpay. GST extra where applicable.</p>
+    </div>
   </div>
 </section>
 
@@ -40,11 +60,18 @@
     <h3 style="margin-top:24px">How does the trial work?</h3>
     <p>Install the app — it gives you 14 days of full functionality, no card details needed. After 14 days you can subscribe from inside the app.</p>
 
-    <h3 style="margin-top:24px">What is UPI AutoPay?</h3>
-    <p>A standing instruction on your UPI app to debit a small amount on a recurring date. ₹149 will be debited every month until you cancel. You can cancel the mandate from your UPI app (PhonePe / GPay / Paytm / BHIM) any time — no need to contact us.</p>
+    <h3 style="margin-top:24px">What's the difference between Single and Firm tier?</h3>
+    <p><b>Single (₹149)</b> activates on one PC, identified by a hardware fingerprint. If a different PC tries the same key, it won't work.</p>
+    <p><b>Firm (₹499)</b> activates against your office network — specifically your router's MAC address and your office public IP. Any PC connected to your office LAN can use the tool. A staff member taking the key home and using it on their personal Wi-Fi will be blocked. Office VPN users are treated as on-LAN, so working from home via the office VPN still works.</p>
 
-    <h3 style="margin-top:24px">Can I use it on more than one PC?</h3>
-    <p>The activation key is bound to one device. If you change machines, email us — we'll re-issue the key to the new device. No extra charge.</p>
+    <h3 style="margin-top:24px">What is UPI AutoPay?</h3>
+    <p>A standing instruction on your UPI app to debit a small amount on a recurring date. ₹149 (or ₹499) will be debited every month until you cancel. You can cancel the mandate from your UPI app (PhonePe / GPay / Paytm / BHIM) any time — no need to contact us.</p>
+
+    <h3 style="margin-top:24px">Can I upgrade from Single to Firm later?</h3>
+    <p>Yes. Cancel the ₹149 mandate from your UPI app, then subscribe to the Firm tier from the app or this page. We'll honor any remaining days from your old subscription.</p>
+
+    <h3 style="margin-top:24px">My office's public IP changes — will the Firm tier break?</h3>
+    <p>If your ISP changes your public IP (rare but possible), the desktop app shows a one-click "Re-link to this network" button. We verify via a magic link emailed to your subscription address, then reissue the key with the new IP. Takes ~30 seconds.</p>
 
     <h3 style="margin-top:24px">What if the IT portal changes and the tool breaks?</h3>
     <p>It will happen. When it does, we ship an update within a few days and your installed app auto-updates. If a fix takes longer than a week, that month is on us — email us and we'll waive the next billing cycle.</p>
@@ -53,7 +80,7 @@
     <p>See the <a href="/refund.html">refund and cancellation policy</a>.</p>
 
     <h3 style="margin-top:24px">Do you store our clients' PAN passwords on your server?</h3>
-    <p>No. Passwords are encrypted with Windows DPAPI and never leave your PC. The only thing our server sees is your subscription record (email + device ID).</p>
+    <p>No. Passwords are encrypted with Windows DPAPI and never leave your PC. The only thing our server sees is your subscription record (email + device ID for Single, or email + office network ID for Firm).</p>
   </div>
 </section>
 

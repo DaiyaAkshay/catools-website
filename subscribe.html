@@ -10,13 +10,15 @@
 <header class="site-header"><div class="inner"><a class="brand" href="/">ca<span class="dot">tool</span>.co.in</a><nav class="nav"><a href="/#products">Products</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a></nav></div></header>
 
 <section class="s">
-  <h2>Subscribe ₹149/month</h2>
-  <p class="lead">
-    UPI AutoPay through Razorpay. Cancel any time from your UPI app — we cannot debit
-    your account once you cancel the mandate.
+  <h2 id="tier-headline">Subscribe</h2>
+  <p class="lead" id="tier-sub">
+    UPI AutoPay through Razorpay. Cancel any time from your UPI app — we cannot
+    debit your account once you cancel the mandate.
   </p>
 
   <form class="subscribe" id="sub-form">
+    <input type="hidden" id="tier" value="single" />
+
     <label for="email">Email address
       <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@firm.com" />
     </label>
@@ -27,7 +29,7 @@
     </label>
     <p class="hint">Only used for invoice records. Not your client's PAN.</p>
 
-    <label for="device">Device ID
+    <label for="device" id="device-label">Device ID
       <input id="device" name="device" type="text" class="device" required readonly />
     </label>
     <p class="hint" id="device-hint">
@@ -36,9 +38,13 @@
     </p>
 
     <div class="submit-row">
-      <button type="submit" class="btn btn-primary">Continue to UPI AutoPay →</button>
+      <button type="submit" class="btn btn-primary" id="submit-btn">Continue to UPI AutoPay →</button>
     </div>
     <div class="err" id="err" hidden></div>
+
+    <p style="text-align:center;font-size:13px;color:#64748b;margin-top:18px">
+      Wrong plan? <a href="/pricing.html">Go back to pricing</a>.
+    </p>
   </form>
 </section>
 
@@ -47,19 +53,42 @@
 </footer>
 
 <script>
-  // The desktop app links here with ?device=<hash>. If absent, the user
-  // landed via direct nav — surface a clearer hint.
   const params = new URLSearchParams(location.search);
+  const tierField = document.getElementById('tier');
+  const headline = document.getElementById('tier-headline');
+  const sub = document.getElementById('tier-sub');
+  const submitBtn = document.getElementById('submit-btn');
   const deviceField = document.getElementById('device');
   const deviceHint = document.getElementById('device-hint');
+  const deviceLabel = document.getElementById('device-label');
+
+  // ----- Tier handling -----
+  const tier = (params.get('tier') || 'single').toLowerCase();
+  tierField.value = (tier === 'firm') ? 'firm' : 'single';
+
+  if (tierField.value === 'firm') {
+    headline.textContent = 'Subscribe — Firm tier — ₹499/month';
+    sub.innerHTML = 'Activation key bound to your office network — unlimited PCs within your office LAN. ' +
+                    'UPI AutoPay via Razorpay; cancel any time from your UPI app.';
+    submitBtn.textContent = 'Continue to UPI AutoPay (₹499/mo) →';
+    deviceLabel.firstChild.textContent = 'Device ID (used to register your office network on first activation)';
+  } else {
+    headline.textContent = 'Subscribe — Single PC — ₹149/month';
+    sub.innerHTML = 'Activation key bound to one PC. ' +
+                    'UPI AutoPay via Razorpay; cancel any time from your UPI app.';
+    submitBtn.textContent = 'Continue to UPI AutoPay (₹149/mo) →';
+  }
+
+  // ----- Device ID prefill from desktop app -----
   const dev = params.get('device') || '';
   deviceField.value = dev;
   if (!dev) {
     deviceField.style.borderColor = '#b91c1c';
     deviceHint.style.color = '#b91c1c';
-    deviceHint.textContent = 'No device ID. Please open the desktop app and click "Activate / Subscribe" — it will redirect here with the correct ID filled in.';
+    deviceHint.textContent = 'No device ID. Open the desktop app and click "Activate / Subscribe" — it will redirect here with the correct ID.';
   }
 
+  // ----- Submission -----
   document.getElementById('sub-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const err = document.getElementById('err');
@@ -67,34 +96,35 @@
     const email = document.getElementById('email').value.trim();
     const pan = document.getElementById('pan').value.trim().toUpperCase();
     const device = deviceField.value.trim();
+    const selectedTier = tierField.value;
     if (!device) {
       err.textContent = 'Device ID missing — see the message above.';
       err.hidden = false;
       return;
     }
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    btn.textContent = 'Creating subscription…';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating subscription…';
     try {
-      // Cloudflare Pages Function at /subscribe forwards to the license server.
       const r = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, pan, device_hash: device }),
+        body: JSON.stringify({ email, pan, device_hash: device, tier: selectedTier }),
       });
       const data = await r.json();
       if (!r.ok || !data.short_url) {
         throw new Error(data.error || 'Could not create subscription. Please try again.');
       }
-      // Park the subscription_id for the success page to poll.
       sessionStorage.setItem('subscription_id', data.subscription_id);
       sessionStorage.setItem('device_hash', device);
+      sessionStorage.setItem('tier', selectedTier);
       location.href = data.short_url;
     } catch (e2) {
       err.textContent = e2.message || String(e2);
       err.hidden = false;
-      btn.disabled = false;
-      btn.textContent = 'Continue to UPI AutoPay →';
+      submitBtn.disabled = false;
+      submitBtn.textContent = (selectedTier === 'firm')
+        ? 'Continue to UPI AutoPay (₹499/mo) →'
+        : 'Continue to UPI AutoPay (₹149/mo) →';
     }
   });
 </script>

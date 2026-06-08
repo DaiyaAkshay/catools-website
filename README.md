@@ -58,7 +58,7 @@ npx wrangler@latest pages dev .
 - `/26as-downloader.html` — main paid product
 - `/gstr2b-recon.html` — free product
 - `/tally-audit.html` — coming-soon product
-- `/pricing.html` — ₹99/mo, FAQ
+- `/pricing.html` — ₹149/mo, FAQ
 - `/subscribe.html` — UPI subscription form
 - `/success.html` — post-payment polling for the activation key
 - `/privacy.html`, `/terms.html`, `/refund.html`, `/contact.html` — required by Razorpay for KYC approval

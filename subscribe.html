@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subscribe — catool.co.in</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+<header class="site-header"><div class="inner"><a class="brand" href="/">ca<span class="dot">tool</span>.co.in</a><nav class="nav"><a href="/#products">Products</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a></nav></div></header>
+
+<section class="s">
+  <h2>Subscribe ₹99/month</h2>
+  <p class="lead">
+    UPI AutoPay through Razorpay. Cancel any time from your UPI app — we cannot debit
+    your account once you cancel the mandate.
+  </p>
+
+  <form class="subscribe" id="sub-form">
+    <label for="email">Email address
+      <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@firm.com" />
+    </label>
+    <p class="hint">We email your activation key here after the first successful payment.</p>
+
+    <label for="pan">Your PAN <span style="color:#64748b;font-weight:400">(optional)</span>
+      <input id="pan" name="pan" type="text" maxlength="10" placeholder="ABCDE1234F" style="text-transform: uppercase" />
+    </label>
+    <p class="hint">Only used for invoice records. Not your client's PAN.</p>
+
+    <label for="device">Device ID
+      <input id="device" name="device" type="text" class="device" required readonly />
+    </label>
+    <p class="hint" id="device-hint">
+      This identifies the PC the key will work on. The 26AS Downloader app auto-fills
+      this for you — if it's empty, open the app and click "Activate / Subscribe".
+    </p>
+
+    <div class="submit-row">
+      <button type="submit" class="btn btn-primary">Continue to UPI AutoPay →</button>
+    </div>
+    <div class="err" id="err" hidden></div>
+  </form>
+</section>
+
+<footer class="site">
+  <div class="legal">© 2026 CA Akshay Daiya · M/s Daiya Tiwari &amp; Soni · <a href="/terms.html" style="color:#cbd5e1">Terms</a> · <a href="/privacy.html" style="color:#cbd5e1">Privacy</a> · <a href="/refund.html" style="color:#cbd5e1">Refund</a></div>
+</footer>
+
+<script>
+  // The desktop app links here with ?device=<hash>. If absent, the user
+  // landed via direct nav — surface a clearer hint.
+  const params = new URLSearchParams(location.search);
+  const deviceField = document.getElementById('device');
+  const deviceHint = document.getElementById('device-hint');
+  const dev = params.get('device') || '';
+  deviceField.value = dev;
+  if (!dev) {
+    deviceField.style.borderColor = '#b91c1c';
+    deviceHint.style.color = '#b91c1c';
+    deviceHint.textContent = 'No device ID. Please open the desktop app and click "Activate / Subscribe" — it will redirect here with the correct ID filled in.';
+  }
+
+  document.getElementById('sub-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const err = document.getElementById('err');
+    err.hidden = true;
+    const email = document.getElementById('email').value.trim();
+    const pan = document.getElementById('pan').value.trim().toUpperCase();
+    const device = deviceField.value.trim();
+    if (!device) {
+      err.textContent = 'Device ID missing — see the message above.';
+      err.hidden = false;
+      return;
+    }
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Creating subscription…';
+    try {
+      // Cloudflare Pages Function at /subscribe forwards to the license server.
+      const r = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, pan, device_hash: device }),
+      });
+      const data = await r.json();
+      if (!r.ok || !data.short_url) {
+        throw new Error(data.error || 'Could not create subscription. Please try again.');
+      }
+      // Park the subscription_id for the success page to poll.
+      sessionStorage.setItem('subscription_id', data.subscription_id);
+      sessionStorage.setItem('device_hash', device);
+      location.href = data.short_url;
+    } catch (e2) {
+      err.textContent = e2.message || String(e2);
+      err.hidden = false;
+      btn.disabled = false;
+      btn.textContent = 'Continue to UPI AutoPay →';
+    }
+  });
+</script>
+</body></html>

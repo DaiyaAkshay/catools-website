@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>26AS / AIS / TIS Downloader — catool.co.in</title>
+  <meta name="description" content="Bulk downloader for Form 26AS, AIS and TIS from the Indian IT e-Filing portal. Per-assessee folders, auto PDF-unlock, partywise + sectionwise Excel, ITR intimation refund + 244A interest." />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/">ca<span class="dot">tool</span>.co.in</a>
+    <nav class="nav">
+      <a href="/#products">Products</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/contact.html">Contact</a>
+      <a class="btn btn-primary" href="/pricing.html">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="product-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">Home</a> / <a href="/#products">Products</a> / 26AS Downloader</div>
+    <h1>26AS / AIS / TIS Downloader</h1>
+    <p class="summary">
+      One-click bulk download of Form 26AS, AIS, TIS — plus 143(1) intimation —
+      from the Indian Income Tax e-Filing portal. Logs in for every client,
+      unlocks the password-protected PDFs, and ships you a partywise +
+      sectionwise Excel summary including refund + interest u/s 244A.
+    </p>
+    <div class="meta">
+      <span><strong>Platform:</strong> Windows 10 / 11 (64-bit)</span>
+      <span><strong>Pricing:</strong> ₹99/month after 14-day free trial</span>
+      <span><strong>Last updated:</strong> June 2026</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="/pricing.html">Subscribe ₹99/mo</a>
+      <a class="btn btn-ghost btn-lg" href="https://github.com/DaiyaAkshay/26as-ais-tis-downloader/releases/latest">Download installer</a>
+    </div>
+  </div>
+</section>
+
+<div class="prose">
+  <h2>What it does</h2>
+  <p>
+    During filing season a CA logs into the IT portal dozens — sometimes hundreds — of
+    times. For each client you punch in PAN, password, the OTP-style "secure access"
+    prompt, the dual-login confirmation, walk through TRACES, tick the "I agree"
+    checkbox, then export 26AS. Repeat for AIS, repeat for TIS, repeat for the
+    intimation. Multiply by 80 clients. That's where this tool earns its ₹99.
+  </p>
+  <p>
+    You add your assessees once (manually or by Excel bulk-import). Then click
+    Download. The tool drives a real Chromium session, fills in credentials, navigates
+    the portal, downloads the documents, strips their PDF passwords, and drops
+    everything into a per-client folder in your Downloads.
+  </p>
+
+  <h2>Headline features</h2>
+  <ul>
+    <li><b>Bulk login + download.</b> 26AS, AIS, TIS, and the latest 143(1) intimation — all four with one click per assessee.</li>
+    <li><b>Auto PDF unlock.</b> The IT department locks every PDF with <code>DDMMYYYY</code> or <code>pan+DDMMYYYY</code>. We unlock them for you using bundled qpdf.</li>
+    <li><b>Excel report — partywise.</b> 26AS Part A rows grouped by deductor (TAN), totals per party.</li>
+    <li><b>Excel report — sectionwise.</b> Same data grouped by TDS section (192, 194A, 194C, 194J …).</li>
+    <li><b>Intimation refund + 244A interest.</b> Parses the 143(1) intimation PDF and pulls the refund determined, demand raised, and interest u/s 244A into a column on the master sheet.</li>
+    <li><b>All-clients master sheet.</b> One row per assessee with TDS totals + refund/interest — perfect for partner review.</li>
+    <li><b>Bulk import from Excel.</b> Onboard 100 clients in a minute with a 4-column sheet.</li>
+    <li><b>Encrypted at rest.</b> PAN passwords are AES-encrypted using Windows DPAPI. Steal the file off the machine and it's unusable.</li>
+    <li><b>Auto-updates.</b> The IT portal changes its layout often; updates ship to your installed app automatically.</li>
+  </ul>
+
+  <h2>What it's not</h2>
+  <p>
+    It is not a cloud service. There is no account, no server we hold your data on. The
+    tool runs on your Windows PC; logins happen from your IP address using your own
+    Chrome browser. The only thing that touches our server is the ₹99/mo subscription —
+    and that goes through Razorpay, not us.
+  </p>
+  <p>
+    It does not file returns, compute tax, or replace your filing software. It moves
+    data from the portal to your local Excel — that's the entire scope.
+  </p>
+
+  <h2>System requirements</h2>
+  <ul>
+    <li>Windows 10 or 11, 64-bit</li>
+    <li>Google Chrome installed (for the Playwright-driven login)</li>
+    <li>Internet connection to incometax.gov.in and tdscpc.gov.in</li>
+    <li>~400 MB free disk space for the installer</li>
+  </ul>
+
+  <h2>Pricing</h2>
+  <p>
+    14-day free trial. After that, <b>₹99/month</b> via UPI AutoPay (Razorpay).
+    Cancel any time from your UPI app — we cannot debit your account once you cancel
+    the mandate. No setup fees, no per-assessee fees.
+  </p>
+
+  <div class="note">
+    <b>How to start:</b> install the trial → use it for two weeks on your real clients
+    → if it saves you time, click "Subscribe ₹99/mo" inside the app. The activation
+    key arrives by email within minutes of the first successful UPI charge.
+  </div>
+
+  <div style="text-align: center; margin: 32px 0;">
+    <a class="btn btn-primary btn-lg" href="/pricing.html">Start 14-day free trial</a>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="grid">
+    <div><h5>catool.co.in</h5><p style="margin:0">Desktop tools built by a CA, for CAs.</p></div>
+    <div><h5>Products</h5><ul><li><a href="/26as-downloader.html">26AS Downloader</a></li><li><a href="/gstr2b-recon.html">GSTR-2B Recon</a></li><li><a href="/tally-audit.html">Tally Audit</a></li></ul></div>
+    <div><h5>Legal</h5><ul><li><a href="/privacy.html">Privacy Policy</a></li><li><a href="/terms.html">Terms of Service</a></li><li><a href="/refund.html">Refund &amp; Cancellation</a></li></ul></div>
+    <div><h5>Contact</h5><ul><li><a href="mailto:akshaybkn@gmail.com">akshaybkn@gmail.com</a></li><li><a href="tel:+919929089598">+91 99290 89598</a></li><li><a href="/contact.html">Contact page</a></li></ul></div>
+  </div>
+  <div class="legal">© 2026 CA Akshay Daiya · M/s Daiya Tiwari &amp; Soni</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GSTR-2B vs Books Recon — catool.co.in</title>
+  <meta name="description" content="Reconcile GSTR-2B with books of accounts. Smart Excel reader, fuzzy column mapping, 16(4) ITC + Rule 37 + RCM compliance baked in." />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+<header class="site-header"><div class="inner"><a class="brand" href="/">ca<span class="dot">tool</span>.co.in</a><nav class="nav"><a href="/#products">Products</a><a href="/pricing.html">Pricing</a><a href="/contact.html">Contact</a><a class="btn btn-primary" href="/pricing.html">Get started</a></nav></div></header>
+
+<section class="product-hero">
+  <div class="container">
+    <div class="crumbs"><a href="/">Home</a> / <a href="/#products">Products</a> / GSTR-2B Recon</div>
+    <h1>GSTR-2B vs Books Reconciliation</h1>
+    <p class="summary">
+      Match every entry on your GSTR-2B against your books of accounts. Handles the messy
+      reality — different column names from Tally / Busy / SAP, 2-row headers, credit notes,
+      and the timing differences between portal and books.
+    </p>
+    <div class="meta">
+      <span><strong>Platform:</strong> Windows 10 / 11 (64-bit)</span>
+      <span><strong>Pricing:</strong> Free for now</span>
+      <span><strong>Status:</strong> Used in active practice</span>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="https://github.com/DaiyaAkshay">Download installer</a>
+    </div>
+  </div>
+</section>
+
+<div class="prose">
+  <h2>What it does</h2>
+  <p>
+    Reads GSTR-2B (JSON download or Excel) and your books of accounts (any column layout —
+    Tally, SAP, Busy, Excel ledger). Matches invoices on <code>GSTIN + Invoice No</code> first,
+    falls back to amount matching when the invoice number differs. Tolerance is ₹1 by default.
+  </p>
+
+  <h2>Headline features</h2>
+  <ul>
+    <li><b>Smart Excel reader.</b> Auto-detects the header row even when there are metadata rows above it, merges 2-row headers, tries all sheets.</li>
+    <li><b>Fuzzy column mapping.</b> Hard aliases for common GST / Tally / Busy / SAP column names, plus a similarity-scored fuzzy fallback. Save your firm's mappings as a profile.</li>
+    <li><b>Unified invoice + note tabs.</b> Credit / debit notes live alongside invoices in the same tab with a Doc Type column. Reconciliation engine separates and matches them on the correct keys.</li>
+    <li><b>Monthly + annual modes.</b> Monthly mode supports carry-forward between periods; annual mode handles year-end GSTR-2B / 2A diffs.</li>
+    <li><b>Folder scan.</b> Point the tool at one client folder. It classifies each file (2B JSON, 2B Excel, books, ledger, CDN), detects the client GSTIN, loads everything in one shot.</li>
+    <li><b>Combined-file import.</b> One workbook with 4 sheets (2B / 2B-notes / books / books-notes) — the tool collapses it into the two unified tabs.</li>
+    <li><b>Compliance built-in.</b> Section 16(4) ITC time-limit, Rule 37 (180-day non-payment), RCM register — all auto-computed after each reconciliation.</li>
+    <li><b>Electronic Credit + Cash Ledger.</b> Year-end ITC and cash ledger reconciliation with the March / April-return timing roll-forward already wired up.</li>
+  </ul>
+
+  <h2>Why CAs use it</h2>
+  <p>
+    Most "GST recon" tools cost ₹500-2,000/month and force you into a fixed column schema.
+    Our books data is never in that schema. This tool learns your column names once, then
+    reconciles 12 months in 30 seconds.
+  </p>
+
+  <div class="note">
+    <b>Pricing note:</b> This tool is currently free as it matures. Once feature-stable
+    we'll add a paid tier (likely ₹99/mo, same as 26AS Downloader). Existing free users
+    will be grandfathered for at least 12 months.
+  </div>
+</div>
+
+<footer class="site">
+  <div class="grid">
+    <div><h5>catool.co.in</h5><p style="margin:0">Desktop tools built by a CA, for CAs.</p></div>
+    <div><h5>Products</h5><ul><li><a href="/26as-downloader.html">26AS Downloader</a></li><li><a href="/gstr2b-recon.html">GSTR-2B Recon</a></li><li><a href="/tally-audit.html">Tally Audit</a></li></ul></div>
+    <div><h5>Legal</h5><ul><li><a href="/privacy.html">Privacy Policy</a></li><li><a href="/terms.html">Terms of Service</a></li><li><a href="/refund.html">Refund &amp; Cancellation</a></li></ul></div>
+    <div><h5>Contact</h5><ul><li><a href="mailto:akshaybkn@gmail.com">akshaybkn@gmail.com</a></li><li><a href="tel:+919929089598">+91 99290 89598</a></li></ul></div>
+  </div>
+  <div class="legal">© 2026 CA Akshay Daiya · M/s Daiya Tiwari &amp; Soni</div>
+</footer>
+</body></html>

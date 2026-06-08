@@ -1,0 +1,24 @@
+{
+  "banners": [
+    {
+      "id": "welcome-2026-06",
+      "title": "Welcome to catool — the CA toolkit",
+      "body": "14 days free, then ₹149/mo for a single PC or ₹499/mo for the whole office LAN. Cancel any time from your UPI app.",
+      "cta_url": "https://catool.co.in/pricing",
+      "cta_label": "View pricing",
+      "valid_from": "2026-06-01",
+      "valid_until": "2026-12-31",
+      "dismissible": true
+    },
+    {
+      "id": "gstr2b-coming-2026-09",
+      "title": "GSTR-2B Recon coming September 2026",
+      "body": "Existing subscribers get it free — no upgrade needed. Same ₹149/₹499 plan covers every tool that joins catool.",
+      "cta_url": "https://catool.co.in/gstr2b-recon.html",
+      "cta_label": "Learn more",
+      "valid_from": "2026-06-01",
+      "valid_until": "2026-09-30",
+      "dismissible": true
+    }
+  ]
+}

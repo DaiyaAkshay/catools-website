@@ -1,12 +1,12 @@
 {
   "banners": [
     {
-      "id": "welcome-2026-06",
-      "title": "Welcome to catool — the CA toolkit",
-      "body": "14 days free, then ₹149/mo for a single PC or ₹499/mo for the whole office LAN. Cancel any time from your UPI app.",
-      "cta_url": "https://catool.co.in/pricing",
-      "cta_label": "View pricing",
-      "valid_from": "2026-06-01",
+      "id": "launch-promo-3mo-2026",
+      "title": "🎉 Launch offer — 3 months free",
+      "body": "Install any catool app on or before 31 Dec 2026 and use it free for 3 full months. No credit card required. After that, ₹149/mo single PC or ₹499/mo for the whole office.",
+      "cta_url": "https://catool.co.in/pricing.html",
+      "cta_label": "Read terms",
+      "valid_from": "2026-06-09",
       "valid_until": "2026-12-31",
       "dismissible": true
     },

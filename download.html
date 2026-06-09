@@ -194,21 +194,31 @@
 </footer>
 
 <script>
-// The Download buttons ALREADY point straight at the installer via the stable
-// URL  /releases/latest/download/CAtool-Setup.exe  — clicking one starts a
-// direct download with no detour to GitHub. This script is purely cosmetic:
-// it asks the GitHub API for the latest version + file size to show under the
-// button. If the API is rate-limited or blocked, the buttons still work — we
-// just leave the generic label. We deliberately do NOT touch the href here.
+// The Download buttons DEFAULT to the stable, version-less URL
+//   /releases/latest/download/CAtool-Setup.exe
+// so a click ALWAYS starts a direct download — no GitHub-page detour, no
+// dependency on this script. We then try to UPGRADE the link to the versioned
+// copy (CAtool-Setup-<version>.exe) so the saved file's name says which build
+// it is. If the API is unavailable, the version-less link still downloads fine.
 (function () {
   var API = 'https://api.github.com/repos/DaiyaAkshay/catool-hub/releases/latest';
   fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
       if (!data) return;
-      var asset = (data.assets || []).find(function (a) { return /\.exe$/i.test(a.name); });
+      var assets = data.assets || [];
+      // Prefer the versioned copy (e.g. CAtool-Setup-0.3.10.exe) so the
+      // downloaded filename carries the version. Fall back to any .exe.
+      var versioned = assets.find(function (a) { return /^CAtool-Setup-\d.*\.exe$/i.test(a.name); });
+      var anyExe = versioned || assets.find(function (a) { return /\.exe$/i.test(a.name); });
       var version = data.tag_name || '';
-      var sizeMb = asset ? Math.round(asset.size / 1024 / 1024) : null;
+      var sizeMb = anyExe ? Math.round(anyExe.size / 1024 / 1024) : null;
+
+      if (versioned) {
+        document.querySelectorAll('#btn-download, #btn-download-2').forEach(function (btn) {
+          btn.href = versioned.browser_download_url;
+        });
+      }
 
       var txt = document.getElementById('btn-dl-text');
       if (txt && version) txt.textContent = 'Download CAtool ' + version + ' for Windows';
@@ -220,7 +230,7 @@
           + (version ? ' · ' + version : '');
       }
     })
-    .catch(function () { /* API blocked — buttons still download fine. */ });
+    .catch(function () { /* API blocked — version-less link still downloads fine. */ });
 }());
 </script>
 

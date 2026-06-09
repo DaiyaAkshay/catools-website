@@ -56,6 +56,10 @@ img { max-width: 100%; height: auto; }
 .nav { display: flex; gap: 22px; align-items: center; }
 .nav a { color: var(--muted); font-size: 14px; }
 .nav a:hover { color: var(--navy); text-decoration: none; }
+/* The nav "Download" button is a .btn-primary, but ".nav a" (specificity 0,1,1)
+   was overriding ".btn-primary" (0,1,0), painting the label muted-grey on navy.
+   Re-assert white, bold text with a higher-specificity rule. */
+.nav a.btn-primary, .nav a.btn-primary:hover { color: #fff; font-weight: 600; }
 .btn {
   display: inline-block;
   padding: 9px 16px;

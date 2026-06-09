@@ -53,15 +53,15 @@
 
   <div class="dl-btn-wrap">
     <a id="btn-download"
-       href="https://github.com/DaiyaAkshay/catool-hub/releases/latest"
-       class="btn-download" target="_blank" rel="noopener">
+       href="https://github.com/DaiyaAkshay/catool-hub/releases/latest/download/CAtool-Setup.exe"
+       class="btn-download" download>
       <!-- SVG download arrow -->
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M10 3v10m0 0-3.5-3.5M10 13l3.5-3.5M3 17h14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <span id="btn-dl-text">Download CAtool for Windows</span>
     </a>
-    <p class="dl-meta" id="dl-meta">Windows 10 / 11, 64-bit &nbsp;·&nbsp; checking latest version…</p>
+    <p class="dl-meta" id="dl-meta">Windows 10 / 11, 64-bit &nbsp;·&nbsp; free 3-month trial</p>
   </div>
 
   <!-- 3-step install guide -->
@@ -130,8 +130,8 @@
   </div>
   <div style="text-align:center; margin-top:32px;">
     <a class="btn btn-primary btn-lg" id="btn-download-2"
-       href="https://github.com/DaiyaAkshay/catool-hub/releases/latest"
-       target="_blank" rel="noopener">Download CAtool — free</a>
+       href="https://github.com/DaiyaAkshay/catool-hub/releases/latest/download/CAtool-Setup.exe"
+       download>Download CAtool — free</a>
   </div>
 </section>
 
@@ -194,26 +194,24 @@
 </footer>
 
 <script>
-// Fetch the latest CAtool release from GitHub and update the download button
-// with the real version number and file size.
+// The Download buttons ALREADY point straight at the installer via the stable
+// URL  /releases/latest/download/CAtool-Setup.exe  — clicking one starts a
+// direct download with no detour to GitHub. This script is purely cosmetic:
+// it asks the GitHub API for the latest version + file size to show under the
+// button. If the API is rate-limited or blocked, the buttons still work — we
+// just leave the generic label. We deliberately do NOT touch the href here.
 (function () {
   var API = 'https://api.github.com/repos/DaiyaAkshay/catool-hub/releases/latest';
   fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
-    .then(function (r) { return r.json(); })
+    .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
-      var asset = (data.assets || []).find(function (a) {
-        return /\.exe$/i.test(a.name);
-      });
+      if (!data) return;
+      var asset = (data.assets || []).find(function (a) { return /\.exe$/i.test(a.name); });
       var version = data.tag_name || '';
-      var url = asset ? asset.browser_download_url
-                      : 'https://github.com/DaiyaAkshay/catool-hub/releases/latest';
       var sizeMb = asset ? Math.round(asset.size / 1024 / 1024) : null;
 
-      var btns = document.querySelectorAll('#btn-download, #btn-download-2');
-      btns.forEach(function (btn) { btn.href = url; });
-
       var txt = document.getElementById('btn-dl-text');
-      if (txt) txt.textContent = 'Download CAtool ' + version + ' for Windows';
+      if (txt && version) txt.textContent = 'Download CAtool ' + version + ' for Windows';
 
       var meta = document.getElementById('dl-meta');
       if (meta) {
@@ -222,9 +220,7 @@
           + (version ? ' · ' + version : '');
       }
     })
-    .catch(function () {
-      // Silently fall back to the releases page link already in the href.
-    });
+    .catch(function () { /* API blocked — buttons still download fine. */ });
 }());
 </script>
 

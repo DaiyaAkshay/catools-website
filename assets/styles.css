@@ -394,8 +394,134 @@ footer.site .legal {
   margin: 0 auto;
 }
 
+/* --- Download page --- */
+.dl-hero {
+  padding: 72px 24px 60px;
+  text-align: center;
+  background: linear-gradient(180deg, #f0f4ff 0%, #fff 100%);
+  border-bottom: 1px solid var(--line);
+}
+.dl-hero .win-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 22px;
+  display: block;
+}
+.dl-hero h1 {
+  font-size: clamp(26px, 3vw, 38px);
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.dl-hero .sub {
+  font-size: 17px;
+  color: var(--muted);
+  margin: 0 auto 32px;
+  max-width: 560px;
+}
+.dl-btn-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.btn-download {
+  background: var(--accent);
+  color: #fff;
+  padding: 16px 36px;
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(4,120,87,0.25);
+  transition: background 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+.btn-download:hover {
+  background: #065f46;
+  box-shadow: 0 6px 18px rgba(4,120,87,0.35);
+  text-decoration: none;
+}
+.dl-meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.dl-steps {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  max-width: 780px;
+  margin: 44px auto 0;
+  flex-wrap: wrap;
+}
+.dl-step {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  padding: 22px 20px;
+  position: relative;
+}
+.dl-step:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 20px;
+}
+.dl-step .step-num {
+  width: 36px;
+  height: 36px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+.dl-step h4 { margin: 0 0 4px; font-size: 15px; }
+.dl-step p  { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+/* dl-tools-grid */
+.dl-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.dl-tool {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  background: #fff;
+}
+.dl-tool .dl-tool-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.dl-tool h4 { margin: 0; font-size: 15.5px; }
+.dl-tool p  { margin: 0; font-size: 14px; color: var(--muted); }
+
+/* small FAQ on download page */
+.dl-faq { max-width: 720px; margin: 0 auto; }
+.dl-faq h3 { font-size: 16px; margin: 24px 0 6px; }
+.dl-faq p  { font-size: 14.5px; color: var(--muted); margin: 0; }
+
 /* --- Nav mobile --- */
 @media (max-width: 720px) {
   .nav { gap: 14px; }
   .nav a:not(.btn) { display: none; }
+}
+@media (max-width: 600px) {
+  .dl-step:not(:last-child)::after { display: none; }
+  .dl-steps { gap: 12px; }
 }

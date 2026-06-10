@@ -1,16 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CAtool">
   <defs>
-    <linearGradient id="fav" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="ctbg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#1e3a8a"/>
       <stop offset="1" stop-color="#172554"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#fav)"/>
+  <rect width="64" height="64" rx="14" fill="url(#ctbg)"/>
   <text x="32" y="31" text-anchor="middle"
         font-family="-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
-        font-weight="800" font-size="28" fill="#ffffff" letter-spacing="-1.5">CA</text>
-  <g transform="translate(32 46) rotate(-22)" fill="none" stroke="#34d399"
-     stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+        font-weight="800" font-size="27" fill="#ffffff" letter-spacing="-1.5">CA</text>
+  <!-- double open-ended spanner -->
+  <g transform="translate(32 45) rotate(-22)" fill="none" stroke="#34d399"
+     stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
     <line x1="-9" y1="0" x2="9" y2="0"/>
     <path d="M-9 0 a5.2 5.2 0 1 1 -3.4 -4.4"/>
     <path d="M9 0 a5.2 5.2 0 1 0 3.4 4.4"/>

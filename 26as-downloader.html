@@ -10,7 +10,7 @@
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content="https://catool.co.in/26as-downloader.html" />
   <meta property="og:title"       content="26AS / AIS / TIS Bulk Downloader for CAs — CAtool" />
-  <meta property="og:description" content="One-click bulk download of Form 26AS, AIS, TIS and 143(1) intimation. Auto-unlock PDFs. Partywise + sectionwise Excel with refund + 244A interest. ₹149/mo." />
+  <meta property="og:description" content="One-click bulk download of Form 26AS, AIS, TIS and 143(1) intimation. Auto-unlock PDFs. Partywise + sectionwise Excel with refund + 244A interest. Free during early access." />
   <meta property="og:site_name"   content="catool.co.in" />
   <meta name="twitter:card"       content="summary" />
   <link rel="stylesheet" href="/assets/styles.css" />
@@ -22,7 +22,7 @@
     <a class="brand" href="/"><img class="brand-logo-img" src="/assets/logo.svg" alt="CAtool" /></a>
     <nav class="nav">
       <a href="/#products">Products</a>
-      <a href="/pricing.html">Pricing</a>
+      <a href="/#how">How it works</a>
       <a href="/contact.html">Contact</a>
       <a class="btn btn-primary" href="/download.html">Download</a>
     </nav>
@@ -41,12 +41,12 @@
     </p>
     <div class="meta">
       <span><strong>Platform:</strong> Windows 10 / 11 (64-bit)</span>
-      <span><strong>Pricing:</strong> ₹149/month — free for 3 months if you install before 31 Dec 2026</span>
+      <span><strong>Pricing:</strong> Free during early access</span>
       <span><strong>Last updated:</strong> June 2026</span>
     </div>
     <div class="cta-row">
       <a class="btn btn-primary btn-lg" href="/download.html">Download CAtool — free</a>
-      <a class="btn btn-ghost btn-lg" href="/pricing.html">View pricing</a>
+      <a class="btn btn-ghost btn-lg" href="/#how">How it works</a>
     </div>
   </div>
 </section>
@@ -58,13 +58,15 @@
     times. For each client you punch in PAN, password, the OTP-style "secure access"
     prompt, the dual-login confirmation, walk through TRACES, tick the "I agree"
     checkbox, then export 26AS. Repeat for AIS, repeat for TIS, repeat for the
-    intimation. Multiply by 80 clients. That's where this tool earns its ₹149.
+    intimation. Multiply by 80 clients. That's the afternoon this tool gives back to you.
   </p>
   <p>
     You add your assessees once (manually or by Excel bulk-import). Then click
-    Download. The tool drives a real Chromium session, fills in credentials, navigates
-    the portal, downloads the documents, strips their PDF passwords, and drops
-    everything into a per-client folder in your Downloads.
+    Download. The tool drives your own installed Google Chrome — quietly, in the
+    background — fills in credentials, navigates the portal, downloads the documents,
+    strips their PDF passwords, and drops everything into a per-client folder in your
+    Downloads. Because it's real Chrome, the portal treats each login as genuine rather
+    than blocking it as an automated bot.
   </p>
 
   <h2>Headline features</h2>
@@ -84,8 +86,7 @@
   <p>
     It is not a cloud service. There is no account, no server we hold your data on. The
     tool runs on your Windows PC; logins happen from your IP address using your own
-    Chrome browser. The only thing that touches our server is the ₹149/mo subscription —
-    and that goes through Razorpay, not us.
+    Chrome browser. Nothing about your clients touches our server.
   </p>
   <p>
     It does not file returns, compute tax, or replace your filing software. It moves
@@ -95,29 +96,54 @@
   <h2>System requirements</h2>
   <ul>
     <li>Windows 10 or 11, 64-bit</li>
-    <li>Google Chrome installed (for the Playwright-driven login)</li>
+    <li>Google Chrome installed (the tool drives your real Chrome for portal logins)</li>
     <li>Internet connection to incometax.gov.in and tdscpc.gov.in</li>
     <li>~400 MB free disk space for the installer</li>
   </ul>
 
-  <h2>Pricing</h2>
+  <h2>What it costs</h2>
   <p>
-    <b>Launch offer:</b> install on or before <b>31 December 2026</b> and get a
-    <b>3-month free trial</b>. (Standard 14-day trial after that date.)
-    No card is asked for at install. After the trial, <b>₹149/month</b> via UPI AutoPay (Razorpay) —
-    cancel any time from your UPI app. No setup fees, no per-assessee fees.
+    Nothing right now. CAtool is <b>completely free during early access</b> — no card, no
+    subscription, no per-assessee fees. Just download it and use it on your real clients.
+    We may introduce fair pricing later, once the tool has earned a place in your practice,
+    but everything you download today stays usable.
   </p>
 
   <div class="note">
-    <b>How to start:</b> install the trial → use it on your real clients for the full 3 months
-    → if it saves you time, click "Subscribe ₹149/mo" inside the app. The activation
-    key arrives by email within minutes of the first successful UPI charge.
+    <b>How to start:</b> download the installer → run it → add your clients (or bulk-import
+    from Excel) → click Download. That's it.
   </div>
 
   <div style="text-align: center; margin: 32px 0;">
-    <a class="btn btn-primary btn-lg" href="/pricing.html">Start 3-month free trial</a>
+    <a class="btn btn-primary btn-lg" href="/download.html">Download CAtool — free</a>
   </div>
 </div>
+
+<section class="s alt" id="faq">
+  <h2>Frequently asked</h2>
+  <div class="faq">
+    <details>
+      <summary>How is this different from a free 26AS downloader?</summary>
+      <p>Free scripts stop at downloading 26AS / AIS / TIS. CAtool also pulls the latest 143(1) intimation with refund + 244A interest, parses TDS partywise and sectionwise into a partner-ready Excel, and lives in the same hub as GSTR-2B Recon and compliance checks.</p>
+    </details>
+    <details>
+      <summary>Will the portal block it as a bot?</summary>
+      <p>No. It drives your real installed Google Chrome with the automation flags stripped, so the e-Filing portal sees a normal Chrome login — not a headless bot. The window runs hidden so it doesn't interrupt you.</p>
+    </details>
+    <details>
+      <summary>Where do my clients' passwords go?</summary>
+      <p>Nowhere. They're encrypted with Windows DPAPI on your own machine and used only to log in to the portal from your PC. No password or PAN is sent to us or written to logs.</p>
+    </details>
+    <details>
+      <summary>What if the IT portal changes its layout?</summary>
+      <p>It changes often. The app auto-updates — when the portal shifts, a fix reaches your installed copy within days, no reinstall needed.</p>
+    </details>
+    <details>
+      <summary>Do I have to pay anything?</summary>
+      <p>No. CAtool is completely free during early access — no card, no subscription. Paid plans may come later once the tool has proven its worth, but there's nothing to pay today.</p>
+    </details>
+  </div>
+</section>
 
 <footer class="site">
   <div class="grid">

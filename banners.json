@@ -1,22 +1,22 @@
 {
   "banners": [
     {
-      "id": "launch-promo-3mo-2026",
-      "title": "🎉 Launch offer — 3 months free",
-      "body": "Install any catool app on or before 31 Dec 2026 and use it free for 3 full months. No credit card required. After that, ₹149/mo single PC or ₹499/mo for the whole office.",
-      "cta_url": "https://catool.co.in/pricing.html",
-      "cta_label": "Read terms",
-      "valid_from": "2026-06-09",
-      "valid_until": "2026-12-31",
+      "id": "free-early-access-2026",
+      "title": "🎉 CAtool is completely free during early access",
+      "body": "No card, no subscription — every tool is free while we grow. Fair paid plans may come later, with plenty of notice.",
+      "cta_url": "https://catool.co.in/",
+      "cta_label": "Learn more",
+      "valid_from": "2026-06-11",
+      "valid_until": "2027-12-31",
       "dismissible": true
     },
     {
-      "id": "gstr2b-coming-2026-09",
-      "title": "GSTR-2B Recon coming September 2026",
-      "body": "Existing subscribers get it free — no upgrade needed. Same ₹149/₹499 plan covers every tool that joins catool.",
+      "id": "gstr2b-live-2026-06",
+      "title": "NEW: GSTR-2B vs Books Recon is here",
+      "body": "Reconcile GSTR-2B against your books — load the portal JSON or Excel, import books straight from TallyPrime, and get a colour-coded Excel with Sec 16(4), Rule 37 and RCM checks. Install it from the Home tab.",
       "cta_url": "https://catool.co.in/gstr2b-recon.html",
       "cta_label": "Learn more",
-      "valid_from": "2026-06-01",
+      "valid_from": "2026-06-11",
       "valid_until": "2026-09-30",
       "dismissible": true
     }

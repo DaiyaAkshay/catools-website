@@ -561,6 +561,10 @@ footer.site .legal {
   max-width: 1000px;
   margin: 0 auto;
 }
+.gallery-wide {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  max-width: 1100px;
+}
 .shot {
   margin: 0;
   border: 1px solid var(--line);

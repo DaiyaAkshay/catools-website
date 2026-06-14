@@ -90,7 +90,7 @@
 </script>
 
 <section class="s" id="products">
-  <h2>Three tools. One hub. One download.</h2>
+  <h2>Four tools. One hub. One download.</h2>
   <p class="lead">Download CAtool once and every tool below is ready to use — no separate installs, no SaaS account, no cloud storage of your clients' data.</p>
   <div class="cards">
     <div class="card">
@@ -116,8 +116,89 @@
       <div class="price"><span class="free">Free</span> <span class="muted">while in early access</span></div>
       <a class="btn btn-primary" href="/tally-audit.html">Learn more →</a>
     </div>
+
+    <div class="card card-highlight">
+      <span class="badge live">Available now</span>
+      <h3>📱 CAtool Remote</h3>
+      <p>Monitor downloads and dispatch bulk jobs from your phone — no app store, no install. Scan a QR code in Settings and your phone becomes a remote control for the office PC running CAtool.</p>
+      <ul class="feature-list">
+        <li>See live job progress from anywhere</li>
+        <li>Dispatch 26AS / AIS / TIS for any client</li>
+        <li>Works on Android &amp; iPhone</li>
+        <li>Included with CAtool — no extra download</li>
+      </ul>
+      <div class="price"><span class="free">Free</span> <span class="muted">included with the hub</span></div>
+      <a class="btn btn-primary" href="#remote">How it works →</a>
+    </div>
   </div>
 </section>
+
+<section class="s alt" id="remote">
+  <h2>Control CAtool from your phone</h2>
+  <p class="lead">One partner stays in the office. Everyone else monitors progress and triggers downloads from wherever they are — phone, tablet, another laptop.</p>
+  <div class="remote-layout">
+    <div class="remote-steps">
+      <div class="remote-step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>Install CAtool on any office Windows PC</h4>
+          <p>That PC becomes the coordinator — it holds the encrypted client list and runs Chrome for the IT portal.</p>
+        </div>
+      </div>
+      <div class="remote-step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>Open Settings → enable Office Sharing</h4>
+          <p>CAtool starts a local hub server and shows a QR code. One scan pairs your phone instantly — no app store, no account.</p>
+        </div>
+      </div>
+      <div class="remote-step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>Pick clients on your phone, tap Dispatch</h4>
+          <p>Select one or fifty clients, choose 26AS / AIS / TIS / Intimation, and watch the progress update live. Jobs queue automatically — one client at a time, no portal conflicts.</p>
+        </div>
+      </div>
+      <div class="remote-step">
+        <div class="step-num">4</div>
+        <div>
+          <h4>Files land on the office PC as usual</h4>
+          <p>PDFs and Excel reports save to your normal downloads folder. Everything stays on your machine — the phone only sends instructions, not data.</p>
+        </div>
+      </div>
+    </div>
+    <div class="remote-callout">
+      <div class="callout-card">
+        <div class="callout-icon">📱</div>
+        <h4>No app store needed</h4>
+        <p>CAtool Remote is a Progressive Web App — open the link on your phone's browser and tap <em>"Add to Home Screen"</em>. Works like a native app, installs in 10 seconds.</p>
+        <p class="callout-note">Included free with every CAtool installation.</p>
+        <a class="btn btn-primary" href="/download.html">Download CAtool — free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.remote-layout { display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; margin-top: 32px; }
+.remote-steps { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 28px; }
+.remote-step { display: flex; gap: 20px; align-items: flex-start; }
+.remote-step .step-num { background: #1e3a8a; color: #fff; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+.remote-step h4 { margin: 0 0 4px; font-size: 15px; }
+.remote-step p { margin: 0; font-size: 14px; color: #555; }
+.remote-callout { flex: 0 0 280px; }
+.callout-card { background: #fff; border: 2px solid #1e3a8a; border-radius: 14px; padding: 28px 24px; text-align: center; box-shadow: 0 4px 24px rgba(30,58,138,.10); }
+.callout-icon { font-size: 40px; margin-bottom: 12px; }
+.callout-card h4 { margin: 0 0 10px; font-size: 18px; color: #172554; }
+.callout-card p { font-size: 14px; color: #444; margin-bottom: 12px; }
+.callout-note { font-weight: 600; color: #15803d !important; font-size: 13px !important; }
+.callout-card .btn { margin-top: 8px; width: 100%; }
+.feature-list { list-style: none; padding: 0; margin: 8px 0 12px; text-align: left; }
+.feature-list li { font-size: 14px; color: #374151; padding: 3px 0; }
+.feature-list li::before { content: "✓ "; color: #15803d; font-weight: 700; }
+.card-highlight { border: 2px solid #1e3a8a; }
+@media (max-width: 640px) { .remote-callout { flex: 1 1 100%; } }
+</style>
 
 <section class="s alt" id="how">
   <h2>One app. Every tool your practice needs.</h2>

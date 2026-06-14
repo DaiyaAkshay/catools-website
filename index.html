@@ -55,6 +55,40 @@
   </div>
 </section>
 
+<!-- Live install counter — real numbers from /api/stats, shown only once
+     meaningful (hidden below STATS_MIN so we never display a tiny figure). -->
+<section class="stats-strip" id="stats-strip" hidden>
+  <div class="container">
+    <div class="stat"><span class="stat-num" id="stat-installs">—</span><span class="stat-label">installs &amp; counting</span></div>
+    <div class="stat"><span class="stat-num" id="stat-active">—</span><span class="stat-label">active this month</span></div>
+    <div class="stat"><span class="stat-num">100%</span><span class="stat-label">on-device · no cloud</span></div>
+  </div>
+</section>
+
+<style>
+  .stats-strip { background: linear-gradient(135deg, #1e3a8a, #172554); color: #fff; padding: 26px 0; }
+  .stats-strip .container { display: flex; justify-content: center; gap: 56px; flex-wrap: wrap; text-align: center; }
+  .stats-strip .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stats-strip .stat-num { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+  .stats-strip .stat-label { font-size: 13px; opacity: 0.7; }
+</style>
+
+<script>
+(function () {
+  var STATS_MIN = 25; // don't show the strip until installs cross this (avoids a tiny number)
+  function fmt(n) { return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : String(n); }
+  fetch('/api/stats')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.ok || (d.installs || 0) < STATS_MIN) return; // stay hidden until meaningful
+      document.getElementById('stat-installs').textContent = fmt(d.installs);
+      document.getElementById('stat-active').textContent = fmt(d.active30 || 0);
+      document.getElementById('stats-strip').hidden = false;
+    })
+    .catch(function () { /* stats unavailable — strip stays hidden */ });
+}());
+</script>
+
 <section class="s" id="products">
   <h2>Three tools. One hub. One download.</h2>
   <p class="lead">Download CAtool once and every tool below is ready to use — no separate installs, no SaaS account, no cloud storage of your clients' data.</p>

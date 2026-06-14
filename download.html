@@ -52,15 +52,13 @@
   </p>
 
   <div class="dl-btn-wrap">
-    <a id="btn-download"
-       href="https://github.com/DaiyaAkshay/catool-releases/releases/latest/download/CAtool-Setup.exe"
-       class="btn-download" download>
+    <button id="btn-download" type="button" class="btn-download">
       <!-- SVG download arrow -->
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M10 3v10m0 0-3.5-3.5M10 13l3.5-3.5M3 17h14" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <span id="btn-dl-text">Download CAtool for Windows</span>
-    </a>
+    </button>
     <p class="dl-meta" id="dl-meta">Windows 10 / 11, 64-bit &nbsp;·&nbsp; free — no subscription</p>
   </div>
 
@@ -129,9 +127,7 @@
     </ul>
   </div>
   <div style="text-align:center; margin-top:32px;">
-    <a class="btn btn-primary btn-lg" id="btn-download-2"
-       href="https://github.com/DaiyaAkshay/catool-releases/releases/latest/download/CAtool-Setup.exe"
-       download>Download CAtool — free</a>
+    <button class="btn btn-primary btn-lg" id="btn-download-2" type="button">Download CAtool — free</button>
   </div>
 </section>
 
@@ -193,36 +189,81 @@
   </div>
 </footer>
 
+<!-- ── Lead-capture modal (required before download) ───────────── -->
+<div class="lead-backdrop" id="lead-backdrop" hidden>
+  <div class="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-h">
+    <button class="lead-close" id="lead-close" aria-label="Close">&times;</button>
+    <h3 id="lead-h">Almost there — where should we send your download?</h3>
+    <p class="lead-sub">We'll start your download right away. We only use this to send you updates and help — never spam.</p>
+    <form id="lead-form">
+      <label>Name
+        <input type="text" id="lead-name" autocomplete="name" placeholder="CA Ramesh Gupta" />
+      </label>
+      <label>Email <span class="req">*</span>
+        <input type="email" id="lead-email" autocomplete="email" required placeholder="you@firm.com" />
+      </label>
+      <label>Mobile <span class="req">*</span>
+        <input type="tel" id="lead-phone" autocomplete="tel" required placeholder="98765 43210" />
+      </label>
+      <label class="lead-consent">
+        <input type="checkbox" id="lead-consent" />
+        <span>I'd like to receive product updates and occasional offers from CAtool. (optional)</span>
+      </label>
+      <p class="lead-err" id="lead-err" hidden></p>
+      <button type="submit" class="btn-download lead-submit" id="lead-submit">
+        <span id="lead-submit-text">Download CAtool for Windows</span>
+      </button>
+      <p class="lead-fine">By downloading you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
+    </form>
+  </div>
+</div>
+
+<style>
+  .lead-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.55); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+  .lead-backdrop[hidden] { display: none; }
+  .lead-modal { background: #fff; border-radius: 16px; max-width: 440px; width: 100%; padding: 30px 30px 24px; position: relative; box-shadow: 0 24px 60px rgba(0,0,0,0.28); }
+  .lead-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 26px; line-height: 1; color: #94a3b8; cursor: pointer; }
+  .lead-modal h3 { margin: 0 0 8px; font-size: 20px; color: #0f172a; }
+  .lead-sub { margin: 0 0 18px; font-size: 14px; color: #64748b; }
+  .lead-modal label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 12px; }
+  .lead-modal .req { color: #dc2626; }
+  .lead-modal input[type=text], .lead-modal input[type=email], .lead-modal input[type=tel] {
+    display: block; width: 100%; margin-top: 5px; padding: 11px 13px; font-size: 15px;
+    border: 1px solid #cbd5e1; border-radius: 9px; font-family: inherit;
+  }
+  .lead-modal input:focus { outline: none; border-color: #1e3a8a; box-shadow: 0 0 0 3px rgba(30,58,138,0.12); }
+  .lead-consent { display: flex; align-items: flex-start; gap: 9px; font-weight: 400; font-size: 13px; color: #475569; margin: 2px 0 14px; }
+  .lead-consent input { margin-top: 2px; }
+  .lead-submit { width: 100%; justify-content: center; border: none; cursor: pointer; font-size: 15px; }
+  .lead-err { background: #fee2e2; color: #b91c1c; font-size: 13px; padding: 9px 12px; border-radius: 8px; margin: 0 0 12px; }
+  .lead-fine { font-size: 11.5px; color: #94a3b8; text-align: center; margin: 12px 0 0; }
+  .lead-fine a { color: #64748b; }
+</style>
+
 <script>
-// The Download buttons DEFAULT to the stable, version-less URL
-//   /releases/latest/download/CAtool-Setup.exe
-// so a click ALWAYS starts a direct download — no GitHub-page detour, no
-// dependency on this script. We then try to UPGRADE the link to the versioned
-// copy (CAtool-Setup-<version>.exe) so the saved file's name says which build
-// it is. If the API is unavailable, the version-less link still downloads fine.
 (function () {
+  // Resolve the best download URL (versioned filename when available). The
+  // buttons are gated: clicking opens the lead form; the download starts only
+  // after the form is submitted.
+  var FALLBACK = 'https://github.com/DaiyaAkshay/catool-releases/releases/latest/download/CAtool-Setup.exe';
+  var downloadUrl = FALLBACK;
+
   var API = 'https://api.github.com/repos/DaiyaAkshay/catool-releases/releases/latest';
   fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (data) {
       if (!data) return;
       var assets = data.assets || [];
-      // Prefer the versioned copy (e.g. CAtool-Setup-0.3.10.exe) so the
-      // downloaded filename carries the version. Fall back to any .exe.
       var versioned = assets.find(function (a) { return /^CAtool-Setup-\d.*\.exe$/i.test(a.name); });
       var anyExe = versioned || assets.find(function (a) { return /\.exe$/i.test(a.name); });
       var version = data.tag_name || '';
       var sizeMb = anyExe ? Math.round(anyExe.size / 1024 / 1024) : null;
-
-      if (versioned) {
-        document.querySelectorAll('#btn-download, #btn-download-2').forEach(function (btn) {
-          btn.href = versioned.browser_download_url;
-        });
-      }
+      if (anyExe) downloadUrl = anyExe.browser_download_url;
 
       var txt = document.getElementById('btn-dl-text');
       if (txt && version) txt.textContent = 'Download CAtool ' + version + ' for Windows';
-
+      var stext = document.getElementById('lead-submit-text');
+      if (stext && version) stext.textContent = 'Download CAtool ' + version;
       var meta = document.getElementById('dl-meta');
       if (meta) {
         meta.textContent = 'Windows 10 / 11, 64-bit'
@@ -230,7 +271,55 @@
           + (version ? ' · ' + version : '');
       }
     })
-    .catch(function () { /* API blocked — version-less link still downloads fine. */ });
+    .catch(function () { /* API blocked — fallback URL still works after the form. */ });
+
+  var backdrop = document.getElementById('lead-backdrop');
+  var form = document.getElementById('lead-form');
+  var errEl = document.getElementById('lead-err');
+  function openModal() { errEl.hidden = true; backdrop.hidden = false; document.getElementById('lead-name').focus(); }
+  function closeModal() { backdrop.hidden = true; }
+
+  document.querySelectorAll('#btn-download, #btn-download-2').forEach(function (b) {
+    b.addEventListener('click', openModal);
+  });
+  document.getElementById('lead-close').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
+
+  function startDownload() {
+    // Trigger the actual file download without leaving the page.
+    var a = document.createElement('a');
+    a.href = downloadUrl; a.download = ''; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errEl.hidden = true;
+    var name = document.getElementById('lead-name').value.trim();
+    var email = document.getElementById('lead-email').value.trim();
+    var phone = document.getElementById('lead-phone').value.trim();
+    var consent = document.getElementById('lead-consent').checked;
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { errEl.textContent = 'Please enter a valid email.'; errEl.hidden = false; return; }
+    if (phone.replace(/\D/g, '').length < 10) { errEl.textContent = 'Please enter a valid 10-digit mobile number.'; errEl.hidden = false; return; }
+
+    var submit = document.getElementById('lead-submit');
+    submit.disabled = true;
+    fetch('/api/lead', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, phone: phone, consent: consent, source: 'download' }),
+    })
+      .then(function (r) { return r.json().catch(function () { return { ok: true }; }); })
+      .then(function (j) {
+        if (j && j.ok === false) { errEl.textContent = j.error || 'Something went wrong — please try again.'; errEl.hidden = false; submit.disabled = false; return; }
+        closeModal();
+        startDownload();
+      })
+      .catch(function () {
+        // Network/Functions down — don't trap the user; let the download proceed.
+        closeModal();
+        startDownload();
+      })
+      .finally(function () { submit.disabled = false; });
+  });
 }());
 </script>
 

@@ -75,7 +75,7 @@
 
 <script>
 (function () {
-  var STATS_MIN = 25; // don't show the strip until installs cross this (avoids a tiny number)
+  var STATS_MIN = 5; // don't show the strip until installs cross this (avoids a tiny number)
   function fmt(n) { return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : String(n); }
   fetch('/api/stats')
     .then(function (r) { return r.ok ? r.json() : null; })

@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "catools-site",
+  "main": "worker.js",
+  "compatibility_date": "2026-06-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "CATOOL_KV",
+      "id": "e528a47004b147cf8e1487293a7c7141"
+    }
+  ],
+  "vars": {
+    "LICENSE_SERVER_URL": "https://catool-license.onrender.com"
+  }
+}

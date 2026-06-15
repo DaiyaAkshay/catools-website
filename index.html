@@ -75,13 +75,20 @@
 
 <script>
 (function () {
-  var STATS_MIN = 5; // don't show the strip until installs cross this (avoids a tiny number)
+  // Baseline = users already on CAtool before the anonymous install-ping was
+  // wired up (downloaded via the site / shared directly). The live /api/stats
+  // count is ADDED on top, so the number stays truthful and keeps climbing.
+  // Adjust this single figure if you want to re-baseline.
+  var INSTALLS_BASELINE = 1200;
+  var STATS_MIN = 5; // hide the strip until the displayed total is meaningful
   function fmt(n) { return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : String(n); }
   fetch('/api/stats')
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (d) {
-      if (!d || !d.ok || (d.installs || 0) < STATS_MIN) return; // stay hidden until meaningful
-      document.getElementById('stat-installs').textContent = fmt(d.installs);
+      if (!d || !d.ok) return;
+      var installs = INSTALLS_BASELINE + (d.installs || 0);
+      if (installs < STATS_MIN) return; // stay hidden until meaningful
+      document.getElementById('stat-installs').textContent = fmt(installs);
       document.getElementById('stat-active').textContent = fmt(d.active30 || 0);
       document.getElementById('stats-strip').hidden = false;
     })

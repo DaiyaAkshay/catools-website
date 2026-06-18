@@ -10,7 +10,7 @@ the catool.co.in origin.
 Any static HTTP server works. The simplest:
 
 ```powershell
-cd H:\ca-tools-website
+cd H:\CAtool-Suite\ca-tools-website
 npx serve@latest -p 5173 .
 # open http://localhost:5173
 ```
@@ -49,7 +49,7 @@ npx wrangler@latest pages dev .
    - Repeat for `www.catool.co.in` (optional, but recommended).
 
 5. **Update the desktop app's subscribe URL**
-   - Edit `H:\IT-Downloader\renderer\app.js` → find `openSubscribePage`.
+   - Edit `H:\CAtool-Suite\IT-Downloader\renderer\app.js` → find `openSubscribePage`.
    - Replace `https://your-license-backend.example.com/subscribe`
      with `https://catool.co.in/subscribe.html?device=${dev}`.
 

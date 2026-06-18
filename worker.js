@@ -42,6 +42,7 @@ export default {
       if (path === '/api/subscribe' && method === 'POST') return await proxySubscribe(request, env);
       if (path === '/api/key' && method === 'GET')     return await proxyKey(request, env);
       if (path.startsWith('/api/recovery/') && method === 'POST') return await proxyRecovery(request, env, path);
+      if (path === '/api/config' && method === 'GET')  return await handleConfig(env);
 
       // Unknown /api path → JSON 404 (so callers get a clean error, not an HTML page).
       if (path.startsWith('/api/')) return json({ ok: false, error: 'not found' }, 404, CORS);
@@ -142,6 +143,22 @@ async function handleStats(env) {
   } catch { /* return whatever we counted */ }
 
   return json({ ok: true, installs, active30 }, 200, cache);
+}
+
+// ── GET /api/config ────────────────────────────────────────────
+// Remote runtime config / KILL SWITCH for the desktop hub + tools. KV-backed
+// (CATOOL_KV key "config"); safe defaults = all tools free, nothing blocked, so
+// a missing/empty/corrupt value can never disrupt users. Edit the KV value to
+// flip free<->paid, gate a min-version, or pause the service. See KILL-SWITCH.md
+// in the catool-hub repo for the field reference and example payloads.
+const CONFIG_DEFAULTS = { freeMode: true, freeUntil: null, killSwitch: false, minVersion: '0.0.0', message: '' };
+async function handleConfig(env) {
+  let cfg = {};
+  try {
+    const raw = env.CATOOL_KV ? await env.CATOOL_KV.get('config') : null;
+    if (raw) cfg = JSON.parse(raw);
+  } catch { cfg = {}; }
+  return json({ ...CONFIG_DEFAULTS, ...cfg, served_at: new Date().toISOString() }, 200, { ...CORS, 'cache-control': 'no-store' });
 }
 
 // ── License-server proxies (keep LICENSE_SERVER_URL out of the browser) ──

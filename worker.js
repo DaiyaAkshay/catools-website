@@ -43,6 +43,9 @@ export default {
       if (path === '/api/key' && method === 'GET')     return await proxyKey(request, env);
       if (path.startsWith('/api/recovery/') && method === 'POST') return await proxyRecovery(request, env, path);
       if (path === '/api/config' && method === 'GET')  return await handleConfig(env);
+      // Aegis PDF licensing (Razorpay → signed Ed25519 license).
+      if (path === '/api/aegis/webhook' && method === 'POST') return await aegisWebhook(request, env);
+      if (path === '/api/aegis/license' && method === 'GET')  return await aegisGetLicense(request, env);
 
       // Unknown /api path → JSON 404 (so callers get a clean error, not an HTML page).
       if (path.startsWith('/api/')) return json({ ok: false, error: 'not found' }, 404, CORS);
@@ -159,6 +162,119 @@ async function handleConfig(env) {
     if (raw) cfg = JSON.parse(raw);
   } catch { cfg = {}; }
   return json({ ...CONFIG_DEFAULTS, ...cfg, served_at: new Date().toISOString() }, 200, { ...CORS, 'cache-control': 'no-store' });
+}
+
+// ══ Aegis PDF licensing ════════════════════════════════════════════════════
+// Razorpay payment → webhook here → we sign an Ed25519 license the desktop app
+// verifies offline (matches src/lib/entitlements.ts + src-tauri/src/lib.rs in the
+// aegis-pdf repo). The buyer retrieves it on the success page by order/payment id.
+//
+// Secrets (Cloudflare → Settings → Variables → Encrypt):
+//   AEGIS_LICENSE_SK               base64 of the 64-byte tweetnacl secretKey
+//                                  (from aegis-pdf/vendor-key.local.json)
+//   AEGIS_RAZORPAY_WEBHOOK_SECRET  the Razorpay webhook secret
+const b64ToBytes = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+const bytesToB64 = (u) => btoa(String.fromCharCode(...u));
+const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+
+// Canonical claims encoding — MUST byte-match encodeClaims() in the app (alphabetical
+// keys, compact JSON) so the signature verifies there.
+function aegisEncodeClaims(c) {
+  const ordered = {
+    email: c.email, exp: c.exp, features: c.features ?? [], grace_days: c.grace_days,
+    iat: c.iat, seats: c.seats, sub: c.sub, tier: c.tier,
+  };
+  return new TextEncoder().encode(JSON.stringify(ordered));
+}
+
+// Sign claims with the vendor Ed25519 private key via WebCrypto. AEGIS_LICENSE_SK is
+// the 64-byte tweetnacl secretKey (seed||pub); WebCrypto wants a PKCS8-wrapped seed.
+async function aegisSignLicense(env, claims) {
+  const sk = b64ToBytes(env.AEGIS_LICENSE_SK);         // 64 bytes
+  const seed = sk.slice(0, 32);
+  const PKCS8_PREFIX = Uint8Array.from([0x30,0x2e,0x02,0x01,0x00,0x30,0x05,0x06,0x03,0x2b,0x65,0x70,0x04,0x22,0x04,0x20]);
+  const pkcs8 = new Uint8Array([...PKCS8_PREFIX, ...seed]);
+  const key = await crypto.subtle.importKey('pkcs8', pkcs8, { name: 'Ed25519' }, false, ['sign']);
+  const sig = new Uint8Array(await crypto.subtle.sign('Ed25519', key, aegisEncodeClaims(claims)));
+  return { claims, sig: bytesToB64(sig) };
+}
+
+// Verify the Razorpay webhook HMAC-SHA256 signature over the raw body.
+async function aegisVerifyRazorpay(rawBody, signatureHex, secret) {
+  if (!signatureHex || !secret) return false;
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(rawBody));
+  const expected = hex(mac);
+  // constant-time-ish compare
+  if (expected.length !== signatureHex.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ signatureHex.charCodeAt(i);
+  return diff === 0;
+}
+
+// POST /api/aegis/webhook — Razorpay calls this on payment. Signs + stores a license.
+async function aegisWebhook(request, env) {
+  if (!env.AEGIS_LICENSE_SK) return json({ ok: false, error: 'signing key not configured' }, 500, CORS);
+  const raw = await request.text();
+  const sig = request.headers.get('x-razorpay-signature') || '';
+  const okSig = await aegisVerifyRazorpay(raw, sig, env.AEGIS_RAZORPAY_WEBHOOK_SECRET);
+  if (!okSig) return json({ ok: false, error: 'bad signature' }, 401, CORS);
+
+  let evt;
+  try { evt = JSON.parse(raw); } catch { return json({ ok: false, error: 'bad json' }, 400, CORS); }
+
+  // Handle a captured one-time payment. (Subscriptions can be added later via
+  // subscription.charged — issue a period-dated license instead of perpetual.)
+  const pay = evt?.payload?.payment?.entity;
+  if (evt?.event !== 'payment.captured' || !pay) {
+    return json({ ok: true, ignored: evt?.event || 'unknown' }, 200, CORS); // ack so Razorpay stops retrying
+  }
+
+  const email = str(pay.email, 120).toLowerCase() || (pay.notes && str(pay.notes.email, 120).toLowerCase());
+  const tier = (pay.notes && ['pro', 'team', 'enterprise'].includes(pay.notes.tier)) ? pay.notes.tier : 'pro';
+  const orderId = str(pay.order_id, 64);
+  const paymentId = str(pay.id, 64);
+
+  const now = Math.floor(Date.now() / 1000);
+  const rand = crypto.getRandomValues(new Uint8Array(6));
+  const claims = {
+    sub: 'LIC-' + [...rand].map((b) => b.toString(16).padStart(2, '0')).join('').toUpperCase(),
+    email: email || 'unknown@aegis',
+    tier,
+    seats: 1,
+    iat: now,
+    exp: now + 100 * 365 * 86400, // perpetual (one-time purchase); ~100 years
+    grace_days: 30,
+    features: [],
+  };
+  const license = await aegisSignLicense(env, claims);
+  const licStr = JSON.stringify(license);
+
+  const kv = env.CATOOL_KV;
+  if (kv) {
+    const opts = { expirationTtl: 60 * 60 * 24 * 400 }; // keep the pickup record ~400 days
+    if (orderId)   await kv.put(`aegis:lic:order:${orderId}`, licStr, opts);
+    if (paymentId) await kv.put(`aegis:lic:pay:${paymentId}`, licStr, opts);
+    if (email)     await kv.put(`aegis:lic:email:${email}`, licStr); // support lookup (not publicly retrievable)
+  }
+  return json({ ok: true }, 200, CORS);
+}
+
+// GET /api/aegis/license?order=<id> | ?payment=<id> — the success page polls this.
+// Keyed on the unguessable Razorpay order/payment id (never on email, to avoid
+// letting anyone fetch a buyer's license by guessing their address).
+async function aegisGetLicense(request, env) {
+  const kv = env.CATOOL_KV;
+  if (!kv) return json({ ok: false, error: 'storage not configured' }, 500, CORS);
+  const q = new URL(request.url).searchParams;
+  const order = str(q.get('order'), 64);
+  const payment = str(q.get('payment'), 64);
+  if (!order && !payment) return json({ ok: false, error: 'order or payment id required' }, 400, CORS);
+  const key = order ? `aegis:lic:order:${order}` : `aegis:lic:pay:${payment}`;
+  const lic = await kv.get(key);
+  if (!lic) return json({ ok: false, pending: true }, 200, { ...CORS, 'cache-control': 'no-store' });
+  return json({ ok: true, license: JSON.parse(lic) }, 200, { ...CORS, 'cache-control': 'no-store' });
 }
 
 // ── License-server proxies (keep LICENSE_SERVER_URL out of the browser) ──

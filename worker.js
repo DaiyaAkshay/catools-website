@@ -1,4 +1,5 @@
 // CAtool website Worker — single entrypoint.
+// (redeploy trigger: pick up DOCWARD_LICENSE_SK / DOCWARD_RAZORPAY_WEBHOOK_SECRET)
 //
 // Cloudflare merged Pages into Workers; the old `functions/` (Pages Functions)
 // convention is NOT executed by a Workers deploy, so this Worker reproduces

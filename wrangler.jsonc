@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "catools-site",
+  "name": "catools-website",
   "main": "worker.js",
   "compatibility_date": "2026-06-15",
   "compatibility_flags": ["nodejs_compat"],

@@ -1,0 +1,28 @@
+<!-- Download form: opened by any button/link with data-download="catool|docward|tallydrop".
+     Logic in /assets/lead.js; posts to /api/lead (worker.js). -->
+<div class="lead-backdrop" id="lead-backdrop" hidden>
+  <div class="lead-modal" role="dialog" aria-modal="true" aria-labelledby="lead-h">
+    <button class="lead-close" id="lead-close" type="button" aria-label="Close">&times;</button>
+    <h3 id="lead-h">Almost there — where should we send updates?</h3>
+    <p class="lead-sub">Your download starts right away. We only use this to send you updates and help — never spam.</p>
+    <form id="lead-form">
+      <label>Name
+        <input type="text" id="lead-name" autocomplete="name" placeholder="CA Ramesh Gupta" />
+      </label>
+      <label>Email <span class="req">*</span>
+        <input type="email" id="lead-email" autocomplete="email" required placeholder="you@firm.com" />
+      </label>
+      <label>Mobile <span class="req">*</span>
+        <input type="tel" id="lead-phone" autocomplete="tel" required placeholder="98765 43210" />
+      </label>
+      <label class="lead-consent">
+        <input type="checkbox" id="lead-consent" />
+        <span>I'd like to receive product updates and occasional offers from CAtool. (optional)</span>
+      </label>
+      <p class="lead-err" id="lead-err" hidden></p>
+      <button type="submit" class="btn-download lead-submit" id="lead-submit"><span id="lead-submit-text">Download</span></button>
+      <p class="lead-fine">By downloading you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
+    </form>
+  </div>
+</div>
+<script src="/assets/lead.js?v={{lead_js_version}}" defer></script>

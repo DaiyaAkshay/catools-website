@@ -13,3 +13,7 @@ wrangler.jsonc
 .gitignore
 .assetsignore
 *.md
+scripts
+scripts/**
+_layout
+_layout/**

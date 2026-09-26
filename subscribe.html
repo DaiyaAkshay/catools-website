@@ -4,13 +4,31 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Subscribe — catool.co.in</title>
+  <meta name="robots" content="noindex" />
   <link rel="icon" href="/assets/favicon.png" type="image/png" /><link rel="icon" href="/assets/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20260926" />
 </head>
 <body>
 <header class="site-header"><div class="inner"><a class="brand" href="/"><img class="brand-logo-img" src="/assets/logo-mark.png" alt="CAtool" /><span class="brand-word">CAtool</span></a><nav class="nav"><a href="/#products">Products</a><a href="/contact.html">Contact</a></nav></div></header>
 
-<section class="s">
+<section class="s" id="sub-section" style="visibility:hidden">
+  <!-- Shown instead of the payment form while /api/config says freeMode (early access).
+       Turning freeMode off in the config brings the form back; no page change needed.
+       Add ?force=1 to the URL to see the form anyway (for testing). -->
+  <div id="free-notice" hidden style="max-width:640px;margin:0 auto;text-align:center">
+    <h2>No subscription needed right now</h2>
+    <p class="lead" style="text-align:center">
+      CAtool is <b>completely free during early access</b> — every tool already works without paying.
+      There's nothing to subscribe to today, so you can close this page and carry on.
+    </p>
+    <p class="lead" style="text-align:center">
+      When paid plans arrive we'll announce them well in advance, inside the app and here.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+      <a class="btn btn-primary" href="/pricing">See pricing</a>
+      <a class="btn btn-ghost" href="/contact.html">Questions? Contact us</a>
+    </div>
+  </div>
   <h2 id="tier-headline">Subscribe</h2>
   <p class="lead" id="tier-sub">
     UPI AutoPay through Razorpay. Cancel any time from your UPI app — we cannot
@@ -173,5 +191,28 @@
         : 'Continue to UPI AutoPay (₹149/mo) →';
     }
   });
+</script>
+<script>
+  // Early access: hide the payment form while the hub's remote config says freeMode.
+  // Fails open (shows the form) if the config can't be read, same as the hub does.
+  (function () {
+    var section = document.getElementById('sub-section');
+    var reveal = function () { section.style.visibility = 'visible'; };
+    var force = new URLSearchParams(location.search).get('force') === '1';
+    var timer = setTimeout(reveal, 3000);
+    fetch('/api/config', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (cfg) {
+        if (cfg && cfg.freeMode && !force) {
+          ['tier-headline', 'tier-sub', 'sub-form'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+          });
+          document.getElementById('free-notice').hidden = false;
+        }
+      })
+      .catch(function () { /* show the form */ })
+      .finally(function () { clearTimeout(timer); reveal(); });
+  })();
 </script>
 </body></html>

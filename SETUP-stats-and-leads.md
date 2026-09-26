@@ -1,36 +1,28 @@
-# One-time setup: install counter + download leads
+# Install counter + download leads
 
-The functions in `functions/api/` (`ping.js`, `stats.js`, `lead.js`) need a single
-Cloudflare KV namespace to store data. Without it they degrade gracefully (the
-hub ping no-ops, the counter stays hidden, the download form still lets people
-download) — but nothing is recorded until you bind it.
+`worker.js` handles `/api/ping`, `/api/stats` and `/api/lead` and stores everything in one
+Cloudflare KV namespace, bound as **`CATOOL_KV`** in `wrangler.jsonc` (namespace id
+`e528a47004b147cf8e1487293a7c7141`). The binding ships with every deploy, so there's nothing to
+set up by hand. If KV were missing, the handlers degrade gracefully: the hub ping no-ops, the
+counter stays hidden, and the download form still lets people download.
 
-## Create + bind the KV namespace (5 minutes, once)
-
-1. Cloudflare dashboard → **Storage & Databases → KV** → **Create a namespace**.
-   Name it e.g. `catool`.
-2. Go to **Workers & Pages → your Pages project (catool.co.in) → Settings →
-   Functions → KV namespace bindings → Add binding**.
-3. Variable name: **`CATOOL_KV`** (must match exactly). Namespace: the one you
-   just created. Save.
-4. Redeploy (any push redeploys, or use "Retry deployment").
-
-That's it. The same namespace holds both:
-- `install:<id>` keys — anonymous install pings (counter source)
-- `lead:<timestamp>` + `leademail:<email>` keys — download form submissions
+The namespace holds:
+- `install:<id>` — anonymous install pings from the CAtool hub (the counter's source)
+- `lead:<timestamp>-<rand>` + `leademail:<email>` — download-form submissions. The `source`
+  field says which page they came from (`download` for CAtool, `tallydrop` for TallyDrop).
+- `docward:lic:*` — Docward licences issued by the Razorpay webhook
+- `config` — the hub's remote config / kill switch (see `/api/config`)
 
 ## See your data
 
-- **Counts** — open `https://catool.co.in/api/stats` → `{ installs, active30 }`.
-  The homepage strip auto-appears once installs cross `STATS_MIN` (25 — change
-  it in `index.html`).
-- **Leads** — Cloudflare dashboard → KV → `catool` → filter keys by `lead:`
-  (each value is the full record incl. marketing-consent flag + timestamp), or
-  run `wrangler kv:key list --binding CATOOL_KV --prefix lead:`.
+- **Counts** — `https://catool.co.in/api/stats` → `{ installs, active30 }`. The homepage strip
+  appears once installs cross `STATS_MIN` (25, set in `index.html`).
+- **Leads** — Cloudflare dashboard → Storage & Databases → KV → the namespace above → filter keys
+  by `lead:`. Or: `npx wrangler kv key list --binding CATOOL_KV --prefix lead: --remote`.
 
 ## Notes
 
-- The install ping carries **no personal data** — a random install id + app
-  version + OS family only. Disclosed in the privacy policy.
-- The download form requires name/email/mobile; the marketing-consent checkbox
-  is optional (unticked) so the consent record stays legally valid.
+- The install ping carries **no personal data**: a random install id, app version and OS family.
+  Disclosed in the privacy policy.
+- The download form requires name, email and mobile. The marketing-consent checkbox is optional
+  and unticked by default, so the consent record stays valid.

@@ -646,10 +646,25 @@ footer.site .legal {
 .faq details[open] summary { border-bottom: 1px solid var(--line); }
 .faq details p { margin: 0; padding: 14px 18px; font-size: 14.5px; color: var(--muted); }
 
-/* --- Nav mobile --- */
+/* --- Nav mobile ---
+   Phones: the links move to a second row under the logo that scrolls sideways if it
+   runs long (they used to be hidden, leaving only the Download button). The button
+   stays top-right, next to the logo. */
 @media (max-width: 720px) {
-  .nav { gap: 14px; }
-  .nav a:not(.btn) { display: none; }
+  .site-header .inner { position: relative; flex-wrap: wrap; padding: 10px 16px 0; }
+  .nav {
+    order: 2; width: 100%; gap: 20px; padding: 6px 0 10px;
+    overflow-x: auto; white-space: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  /* Soft fade over the right end of the link row: hints that it scrolls when wider than the
+     screen. An overlay rather than a mask on .nav, which would also hide the Download button. */
+  .site-header .inner::after {
+    content: ""; position: absolute; right: 0; bottom: 0; width: 36px; height: 36px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff); pointer-events: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a:not(.btn) { display: inline-block; flex: 0 0 auto; }
+  .nav a.btn { position: absolute; top: 10px; right: 16px; padding: 8px 14px; font-size: 13px; }
 }
 @media (max-width: 600px) {
   .dl-step:not(:last-child)::after { display: none; }

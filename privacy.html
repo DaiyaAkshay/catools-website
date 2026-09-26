@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy Policy — catool.co.in</title>
   <link rel="icon" href="/assets/favicon.png" type="image/png" /><link rel="icon" href="/assets/favicon.ico" sizes="any" />
-  <link rel="stylesheet" href="/assets/styles.css" />
+  <link rel="stylesheet" href="/assets/styles.css?v=20260926" />
 </head>
 <body>
 <header class="site-header"><div class="inner"><a class="brand" href="/"><img class="brand-logo-img" src="/assets/logo-mark.png" alt="CAtool" /><span class="brand-word">CAtool</span></a><nav class="nav"><a href="/#products">Products</a><a href="/contact.html">Contact</a></nav></div></header>
 
 <div class="prose">
   <h1>Privacy Policy</h1>
-  <p><i>Last updated: 14 June 2026</i></p>
+  <p><i>Last updated: 26 September 2026</i></p>
 
   <p>
     This privacy policy explains how <b>CA Akshay Daiya</b> (sole proprietor, operating
@@ -36,16 +36,30 @@
     <li>Your <b>PAN</b> (optional) — for invoice records.</li>
     <li>A <b>device fingerprint</b> (SHA-256 hash of hostname + MAC + platform) — to bind the licence key to one PC and prevent uncontrolled key sharing.</li>
     <li>Your <b>Razorpay subscription metadata</b> (subscription ID, payment status, billing dates) — to know whether your key should remain active.</li>
-    <li>Your <b>name, email and mobile number</b> when you download the app — collected on the download form so we can send you the download, product updates, and support. If you tick the optional marketing box, we record that consent (with a timestamp) and may send you occasional offers; you can opt out any time by emailing us.</li>
+    <li>Your <b>name, email and mobile number</b> when you download any of our apps (CAtool, Docward, TallyDrop) — collected on the download form so we can send you the download, product updates, and support. With it we record which product page you downloaded from, the time, your browser's user-agent and your approximate country (from your IP address). If you tick the optional marketing box, we record that consent (with a timestamp) and may send you occasional offers; you can opt out any time by emailing us.</li>
+    <li>When you <b>buy Docward Pro</b>: your email address and the Razorpay order and payment IDs, which we use to issue your licence and let you fetch it again later. The licence itself contains your email address.</li>
     <li>Standard <b>web server logs</b> (IP, user-agent, timestamps) for security and abuse prevention.</li>
   </ul>
 
-  <p>From the <b>desktop applications</b> (26AS Downloader, GSTR-2B Recon, Tally Audit):</p>
+  <p>From the <b>CAtool hub and its tools</b> (26AS Downloader, GSTR-2B Recon, Tally Audit):</p>
   <ul>
-    <li><b>Nothing.</b> The desktop apps do not transmit assessee data, PAN passwords, books data, or any client information to us or any third party. Everything stays on your Windows PC.</li>
+    <li><b>No client data.</b> The apps do not transmit assessee data, PAN passwords, books data, or any client information to us or any third party. Everything stays on your Windows PC.</li>
     <li>The 26AS Downloader's automated login uses your client's PAN + password against the IT e-Filing portal directly from your machine — those credentials never traverse our servers.</li>
     <li>When a new version is released, the app contacts GitHub Releases to download the installer. No personal data is transmitted with this check.</li>
+    <li>The hub regularly reads its settings and announcements from catool.co.in (for example, whether early access is still free). These requests carry no personal data.</li>
     <li><b>Anonymous usage statistics:</b> the hub sends a once-a-day ping containing a random install identifier (not derived from your name, PAN, email or hardware) plus the app version and operating-system family (e.g. "Windows / x64"). This lets us count installs and active users. It contains <b>no personal data and no client data</b>, and is not used to profile or track you across other sites.</li>
+    <li>If you use <b>licence recovery</b>, the email address you enter is sent to our licence server so it can email you a one-time code.</li>
+  </ul>
+
+  <p>From <b>Docward</b> (PDF editor):</p>
+  <ul>
+    <li><b>Your documents never leave your PC.</b> Editing, redaction and OCR all run on your device. The only network call the app makes is an optional licence check, which carries no document data.</li>
+  </ul>
+
+  <p>From <b>TallyDrop</b> (opens Tally data in the matching Tally version):</p>
+  <ul>
+    <li><b>Your Tally data never leaves your PC.</b> TallyDrop reads only the start of a company's data file, locally, to tell which Tally release it belongs to. It never changes client data.</li>
+    <li>Up to twice a day it reads <code>catool.co.in/tallydrop/version.json</code> to learn about new versions and Tally releases. The request carries only the TallyDrop version number, and you can switch it off on TallyDrop's About tab.</li>
   </ul>
 
   <h2>3. Why we collect it</h2>
@@ -53,14 +67,19 @@
     <li><b>Email + PAN:</b> billing, support, and statutory invoice generation.</li>
     <li><b>Device hash:</b> licence enforcement (one paid licence = one PC).</li>
     <li><b>Subscription metadata:</b> to issue and revoke activation keys when your UPI mandate succeeds or is cancelled.</li>
+    <li><b>Download-form details:</b> to send you the download, product updates and support; marketing only if you gave consent.</li>
+    <li><b>Docward purchase details:</b> to issue your licence, let you retrieve it, and support you if you lose it.</li>
+    <li><b>Anonymous install pings:</b> to count how many installations are in use.</li>
   </ul>
 
   <h2>4. Who we share it with</h2>
   <ul>
-    <li><b>Razorpay Software Pvt. Ltd.</b> — to process your UPI AutoPay subscription. They receive your email, PAN, and payment instrument data. Refer to <a href="https://razorpay.com/privacy/">razorpay.com/privacy</a>.</li>
-    <li><b>Our cloud host</b> (Cloudflare Pages, Render) — they receive standard server logs.</li>
+    <li><b>Razorpay Software Pvt. Ltd.</b> — to process your UPI AutoPay subscription and Docward purchases. They receive your email, PAN (if given), and payment instrument data. Refer to <a href="https://razorpay.com/privacy/">razorpay.com/privacy</a>.</li>
+    <li><b>Cloudflare</b> — hosts this website and stores the download-form, install-ping and Docward licence records described above; it also applies security and bot protection to the site.</li>
+    <li><b>Render</b> — hosts the licence server for CAtool subscriptions and licence recovery.</li>
+    <li><b>GitHub</b> — our installers are served from GitHub Releases, so GitHub sees your IP address and browser details when you download or the apps update.</li>
     <li><b>Indian government authorities</b> — if compelled by valid legal process under Indian law.</li>
-    <li><b>Nobody else.</b> We do not sell, rent, or trade your data. We do not run ad networks, analytics that profile users across sites, or marketing trackers beyond a single Google Analytics counter on this site.</li>
+    <li><b>Nobody else.</b> We do not sell, rent, or trade your data. We do not run ad networks, analytics or marketing trackers on this site.</li>
   </ul>
 
   <h2>5. How long we keep it</h2>
@@ -68,6 +87,9 @@
     <li><b>Active subscription records:</b> for as long as the subscription is active, plus 8 financial years (Section 36 of the CGST Act &amp; Section 44AA of the Income Tax Act book-keeping requirements).</li>
     <li><b>Cancelled subscriptions:</b> we retain the email + payment record for 8 financial years, then permanently delete.</li>
     <li><b>Server logs:</b> 30 days.</li>
+    <li><b>Download-form records:</b> until you ask us to delete them.</li>
+    <li><b>Install pings:</b> the random install identifier and its last-seen details, until deleted.</li>
+    <li><b>Docward licences:</b> the pick-up record for your order is kept about 400 days; a copy of the licence linked to your email is kept for support until you ask us to delete it; payment records as for subscriptions above.</li>
   </ul>
 
   <h2>6. Your rights under the DPDP Act 2023</h2>
@@ -76,7 +98,7 @@
     <li><b>Access</b> the personal data we hold about you.</li>
     <li><b>Correct</b> inaccurate personal data.</li>
     <li><b>Erase</b> your personal data, subject to statutory retention requirements above.</li>
-    <li><b>Withdraw consent</b> at any time by cancelling your subscription and emailing us to delete your account.</li>
+    <li><b>Withdraw consent</b> at any time — to stop marketing emails, or by cancelling your subscription and emailing us to delete your account and download-form details.</li>
     <li><b>Lodge a grievance</b> with the Data Protection Board of India if we don't respond satisfactorily.</li>
   </ul>
   <p>Email all such requests to <a href="mailto:akshaybkn@gmail.com">akshaybkn@gmail.com</a>. We aim to respond within 7 working days.</p>

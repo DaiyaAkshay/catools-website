@@ -44,6 +44,12 @@ export default {
       if (path === '/api/key' && method === 'GET')     return await proxyKey(request, env);
       if (path.startsWith('/api/recovery/') && method === 'POST') return await proxyRecovery(request, env, path);
       if (path === '/api/config' && method === 'GET')  return await handleConfig(env);
+    // Hub's third public-IP fallback (shared/firm-network.js): bare IP as plain text.
+    if (path === '/api/myip' && method === 'GET') {
+      return new Response(request.headers.get('cf-connecting-ip') || '', {
+        headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store', ...CORS },
+      });
+    }
       // Docward PDF licensing (Razorpay → signed Ed25519 license).
       if (path === '/api/docward/webhook' && method === 'POST') return await docwardWebhook(request, env);
       if (path === '/api/docward/license' && method === 'GET')  return await docwardGetLicense(request, env);

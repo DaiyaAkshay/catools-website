@@ -1,0 +1,13 @@
+{
+  "product": "TallyDrop",
+  "latest": "1.0.0",
+  "page": "https://catool.co.in/tallydrop/",
+  "download": "https://catool.co.in/tallydrop/TallyDrop.exe",
+  "notes": "First public release.",
+  "announcement": "",
+  "announcementUrl": "",
+  "tallyReleases": [
+    { "product": "TP",   "release": "7.1", "setup": "https://tallymirror.tallysolutions.com/download_centre/Rel.7.1_gold/TP/Full/setup.exe",   "released": "May 2026" },
+    { "product": "TPEL", "release": "7.1", "setup": "https://tallymirror.tallysolutions.com/download_centre/Rel.7.1_gold/TPEL/Full/setup.exe", "released": "May 2026" }
+  ]
+}

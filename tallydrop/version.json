@@ -1,9 +1,9 @@
 {
   "product": "TallyDrop",
-  "latest": "1.0.0",
+  "latest": "1.0.1",
   "page": "https://catool.co.in/tallydrop/",
   "download": "https://catool.co.in/tallydrop/TallyDrop.exe",
-  "notes": "First public release.",
+  "notes": "Fixes Tally opening on the company list instead of the dropped company, and repairs the \"Application settings are lost\" message caused by 1.0.0. Please update.",
   "announcement": "",
   "announcementUrl": "",
   "tallyReleases": [

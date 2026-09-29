@@ -17,6 +17,14 @@ The namespace holds:
 
 - **Counts** — `https://catool.co.in/api/stats` → `{ installs, active30 }`. The homepage strip
   appears once installs cross `STATS_MIN` (25, set in `index.html`).
+- **TallyDrop usage** — `https://catool.co.in/api/stats?app=tallydrop` → `pcs` (all PCs ever seen),
+  `active1` / `active7` / `active30` (PCs that checked for updates in the last 1 / 7 / 30 days), `versions30`,
+  `countries30`, and `downloads7` / `downloads30` / `downloadsByDay` (exe downloads). Every TallyDrop checks
+  `/tallydrop/version.json` up to twice a day with User-Agent `TallyDrop/<version>`. The Worker sees those
+  requests because `wrangler.jsonc` lists the file in `assets.run_worker_first`. It keeps one KV key per PC,
+  `tdpc:<salted hash of the network address>`, and writes it at most once a day. PCs behind one office
+  connection count as one, and copies with update checks switched off aren't seen, so treat the numbers as a
+  floor. Downloads are `tddl:<date>` counters.
 - **Leads** — Cloudflare dashboard → Storage & Databases → KV → the namespace above → filter keys
   by `lead:`. Or: `npx wrangler kv key list --binding CATOOL_KV --prefix lead: --remote`.
 

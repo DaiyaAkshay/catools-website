@@ -7,7 +7,10 @@
   "observability": { "enabled": true },
   "assets": {
     "directory": ".",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // These static files go through worker.js first so TallyDrop update checks and downloads can be
+    // counted (see countTallyDropCheck); the Worker still serves them from the assets unchanged.
+    "run_worker_first": ["/tallydrop/version.json", "/tallydrop/TallyDrop.exe"]
   },
   "kv_namespaces": [
     {

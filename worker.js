@@ -37,9 +37,25 @@ export default {
     }
 
     try {
+      // TallyDrop usage + downloads. These two static files reach the Worker first because they are listed
+      // in wrangler.jsonc assets.run_worker_first; they are still served from the assets as-is.
+      if (path === '/tallydrop/version.json' && method === 'GET') {
+        const res = await env.ASSETS.fetch(request);
+        const ua = request.headers.get('user-agent') || '';
+        if (res.ok && /^TallyDrop\/\d/.test(ua)) ctx.waitUntil(countTallyDropCheck(request, env, ua).catch(() => {}));
+        return res;
+      }
+      if (path === '/tallydrop/TallyDrop.exe' && method === 'GET') {
+        const res = await env.ASSETS.fetch(request);
+        if (res.status === 200) ctx.waitUntil(countTallyDropDownload(env).catch(() => {}));
+        return res;
+      }
+
       if (path === '/api/lead' && method === 'POST')   return await handleLead(request, env);
       if (path === '/api/ping' && method === 'POST')   return await handlePing(request, env);
-      if (path === '/api/stats' && method === 'GET')   return await handleStats(env);
+      if (path === '/api/stats' && method === 'GET') {
+        return url.searchParams.get('app') === 'tallydrop' ? await handleTallyDropStats(env) : await handleStats(env);
+      }
       if (path === '/api/subscribe' && method === 'POST') return await proxySubscribe(request, env);
       if (path === '/api/key' && method === 'GET')     return await proxyKey(request, env);
       if (path.startsWith('/api/recovery/') && method === 'POST') return await proxyRecovery(request, env, path);
@@ -127,6 +143,85 @@ async function handlePing(request, env) {
     });
   } catch { /* best effort */ }
   return json({ ok: true }, 200, CORS);
+}
+
+// ── TallyDrop usage ────────────────────────────────────────────
+// Every TallyDrop (1.0.0+) reads /tallydrop/version.json up to twice a day with User-Agent "TallyDrop/<ver>".
+// Each checking PC is recorded under a salted hash of its network address (the address itself is never
+// stored), at most one KV write per PC per day. PCs behind one office connection count as one, so the
+// numbers are a floor. Keys: tdpc:<hash> (metadata firstDay/lastDay/version/country, expire after 400 days),
+// tddl:<YYYY-MM-DD> (exe downloads that day).
+async function countTallyDropCheck(request, env, ua) {
+  const kv = env.CATOOL_KV;
+  const ip = request.headers.get('cf-connecting-ip') || '';
+  if (!kv || !ip) return;
+  const key = 'tdpc:' + (await sha256Hex((env.STATS_SALT || 'catool-tallydrop-v1') + '|' + ip)).slice(0, 24);
+  const today = new Date().toISOString().slice(0, 10);
+  const version = str((ua.match(/^TallyDrop\/([0-9.]+)/) || [])[1], 20);
+  const prev = (await kv.getWithMetadata(key)).metadata;
+  if (prev && prev.lastDay === today && prev.version === version) return;
+  await kv.put(key, '1', {
+    expirationTtl: 400 * 86400,
+    metadata: {
+      firstDay: (prev && prev.firstDay) || today,
+      lastDay: today,
+      version,
+      country: str(request.cf && request.cf.country, 4),
+    },
+  });
+}
+
+async function countTallyDropDownload(env) {
+  const kv = env.CATOOL_KV;
+  if (!kv) return;
+  const key = 'tddl:' + new Date().toISOString().slice(0, 10);
+  const n = parseInt((await kv.get(key)) || '0', 10) || 0; // not atomic; fine for a daily count
+  await kv.put(key, String(n + 1), { expirationTtl: 400 * 86400 });
+}
+
+// GET /api/stats?app=tallydrop — counts only, nothing identifying.
+async function handleTallyDropStats(env) {
+  const kv = env.CATOOL_KV;
+  const cache = { 'cache-control': 'public, max-age=300', ...CORS };
+  const out = { ok: true, app: 'tallydrop', pcs: 0, active1: 0, active7: 0, active30: 0, versions30: {}, countries30: {}, downloads7: 0, downloads30: 0, downloadsByDay: {} };
+  if (!kv) return json(out, 200, cache);
+
+  const day = (offset) => new Date(Date.now() - offset * 86400000).toISOString().slice(0, 10);
+  const d1 = day(0), d7 = day(6), d30 = day(29);
+  let cursor;
+  try {
+    do {
+      const res = await kv.list({ prefix: 'tdpc:', limit: 1000, cursor });
+      for (const k of res.keys) {
+        const m = k.metadata || {};
+        out.pcs++;
+        if (!m.lastDay) continue;
+        if (m.lastDay >= d1) out.active1++;
+        if (m.lastDay >= d7) out.active7++;
+        if (m.lastDay >= d30) {
+          out.active30++;
+          const v = m.version || 'unknown';
+          out.versions30[v] = (out.versions30[v] || 0) + 1;
+          const c = m.country || '??';
+          out.countries30[c] = (out.countries30[c] || 0) + 1;
+        }
+      }
+      cursor = res.list_complete ? null : res.cursor;
+    } while (cursor);
+
+    const days = await Promise.all(Array.from({ length: 30 }, (_, i) => day(i)).map(async (d) => [d, parseInt((await kv.get('tddl:' + d)) || '0', 10) || 0]));
+    for (const [d, n] of days) {
+      if (n) out.downloadsByDay[d] = n;
+      out.downloads30 += n;
+      if (d >= d7) out.downloads7 += n;
+    }
+  } catch { /* return whatever we counted */ }
+  return json(out, 200, cache);
+}
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 // ── GET /api/stats ─────────────────────────────────────────────

@@ -333,10 +333,25 @@ async function docwardWebhook(request, env) {
     return json({ ok: true, ignored: evt?.event || 'unknown' }, 200, CORS); // ack so Razorpay stops retrying
   }
 
+  // Only a Docward purchase earns a licence. The Razorpay account also takes CAtool subscription
+  // payments, and this used to sign a Pro licence for ANY captured payment. The Docward payment
+  // button (pl_TDOm10U1dj2My5 on docward.html) charges the founding price; list every price the
+  // button may charge, in paise, in DOCWARD_PRICES_PAISE when it changes.
+  const prices = String(env.DOCWARD_PRICES_PAISE || '99900,149900').split(',').map((p) => Number(p.trim())).filter(Boolean);
+  if (pay.currency !== 'INR' || !prices.includes(Number(pay.amount))) {
+    return json({ ok: true, ignored: 'not a Docward purchase' }, 200, CORS); // ack so Razorpay stops retrying
+  }
+
   const email = str(pay.email, 120).toLowerCase() || (pay.notes && str(pay.notes.email, 120).toLowerCase());
-  const tier = (pay.notes && ['pro', 'team', 'enterprise'].includes(pay.notes.tier)) ? pay.notes.tier : 'pro';
+  // Always "pro": payment notes can be filled in by the buyer, so they must not pick the tier.
+  const tier = 'pro';
   const orderId = str(pay.order_id, 64);
   const paymentId = str(pay.id, 64);
+
+  // Razorpay retries webhooks; keep the licence already issued for this payment.
+  if (env.CATOOL_KV && paymentId && (await env.CATOOL_KV.get(`docward:lic:pay:${paymentId}`))) {
+    return json({ ok: true, duplicate: true }, 200, CORS);
+  }
 
   const now = Math.floor(Date.now() / 1000);
   const rand = crypto.getRandomValues(new Uint8Array(6));

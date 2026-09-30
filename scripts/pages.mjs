@@ -21,7 +21,7 @@ export const APPS = {
   },
   docward: {
     name: 'Docward',
-    description: 'Privacy-first PDF editor with OCR, redaction and signing that works 100% on your own PC.',
+    description: 'Privacy-first PDF editor with OCR and true redaction that works 100% on your own PC.',
     url: '/docward',
   },
   tallydrop: {
@@ -78,7 +78,7 @@ export const PAGES = [
   {
     file: 'docward.html', path: '/docward',
     title: 'Docward — Acrobat-class PDF editing that never leaves your device',
-    description: 'Docward is a privacy-first desktop PDF editor with built-in OCR. Edit text, redact, recognise scans, sign, organise and convert PDFs — 100% on your own PC. Free with a watermark; a one-time upgrade removes it.',
+    description: 'Docward is a privacy-first desktop PDF editor with built-in OCR. Edit text, redact, recognise scans, add signature images, organise and convert PDFs — 100% on your own PC. Free with a watermark; a one-time upgrade removes it.',
     cta: { label: 'Get Docward', href: '#pricing' },
     lead: true, app: 'docward',
   },

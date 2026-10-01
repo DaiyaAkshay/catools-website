@@ -2,3 +2,7 @@ node_modules/
 .DS_Store
 .wrangler/
 *.log
+# agent worktrees (Claude app / claude -w)
+.claude/worktrees/
+# wrangler local secrets
+.dev.vars

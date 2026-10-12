@@ -59,6 +59,8 @@ function jsonLd(page) {
   return blocks.map((b) => `  <script type="application/ld+json">${JSON.stringify(b).replace(/</g, '\\u003c')}</script>`);
 }
 
+const GA_ID = 'G-S4NBSRVDQ0';
+
 function headBlock(page) {
   const url = SITE + page.path;
   const image = SITE + (page.image || '/assets/logo-full.png');
@@ -66,6 +68,9 @@ function headBlock(page) {
   const lines = [
     '<meta charset="utf-8" />',
     '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+    // Google Analytics 4 (property G-S4NBSRVDQ0), on every page.
+    `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>`,
+    `<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_ID}');</script>`,
     `<title>${esc(page.title)}</title>`,
     `<meta name="description" content="${esc(page.description)}" />`,
     page.noindex ? '<meta name="robots" content="noindex" />' : null,

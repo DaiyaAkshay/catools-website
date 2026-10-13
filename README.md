@@ -70,3 +70,16 @@ apply, e.g. `freeMode: true`). For the Worker exactly as deployed, `npx wrangler
 Installers live in public GitHub release repos (source code stays private):
 `DaiyaAkshay/catool-releases` (hub), `catool-tool-releases` (hub tools), `docward-releases` (Docward).
 TallyDrop's exe is committed here under `tallydrop/` (it's ~140 KB).
+
+## SEO checks and review
+
+After editing pages, run `node scripts/build.mjs`, `node scripts/build.mjs --check`, and
+`python3 scripts/check-seo.py` (`python` on Windows). The SEO check covers metadata, JSON-LD,
+local links and anchors, image dimensions, analytics, and sitemap/robots consistency.
+For Node versions that treat `worker.js` as CommonJS, preview with
+`node --experimental-default-type=module scripts/serve.mjs 5501`.
+
+The SEO audit, decisions, limitations and complete review diff are in `docs/SEO-AUDIT.md`
+and `docs/SEO-CHANGES.md`. `docs/` is excluded from public assets. Product schemas describe
+software, including hub modules, rather than professional services. Existing pricing and
+beta status remain authoritative; no ratings or reviews are invented for rich results.

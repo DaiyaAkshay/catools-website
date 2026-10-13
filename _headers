@@ -1,4 +1,4 @@
-# Cloudflare Pages headers config
+# Cloudflare Workers static asset headers
 
 /*
   X-Content-Type-Options: nosniff
@@ -7,4 +7,10 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
 
 /assets/*
-  Cache-Control: public, max-age=86400, immutable
+  Cache-Control: public, max-age=86400
+
+/tallydrop/*.png
+  Cache-Control: public, max-age=86400
+
+/tallydrop/*.webp
+  Cache-Control: public, max-age=86400

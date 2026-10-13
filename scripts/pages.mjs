@@ -12,8 +12,20 @@
 export const SITE = 'https://catool.co.in';
 export const BRAND = 'CAtool';
 
-// Downloadable apps. `lead.js` uses the same keys (data-download="catool" etc.).
+// Product schema definitions. Only standalone download keys (catool/docward/tallydrop) are used by lead.js.
 export const APPS = {
+  downloader: {
+    name: 'CAtool 26AS / AIS / TIS Downloader', url: '/26as-downloader',
+    description: 'Bulk-download Form 26AS, AIS and TIS, unlock PDFs and export TDS summaries to Excel. Included in the CAtool hub.',
+  },
+  recon: {
+    name: 'CAtool GSTR-2B Recon', url: '/gstr2b-recon',
+    description: 'Reconcile GSTR-2B against books of accounts from JSON, Excel or Tally. Included in the CAtool hub.',
+  },
+  audit: {
+    name: 'CAtool Tally Audit Dashboard (beta)', url: '/tally-audit',
+    description: 'Review live Tally data, TDS/TCS comparisons against 26AS and audit exceptions. Beta tool included in CAtool.',
+  },
   catool: {
     name: 'CAtool',
     description: 'Windows hub app for practising CAs: bulk 26AS / AIS / TIS downloads, GSTR-2B reconciliation and a Tally audit dashboard.',
@@ -44,8 +56,8 @@ export const PRODUCT_LINKS = [
 export const PAGES = [
   {
     file: 'index.html', path: '/',
-    title: 'CAtool — desktop tools for CA firms: 26AS, GSTR-2B Recon, Tally Audit',
-    description: 'Windows tools built by a practising CA: the CAtool hub (bulk 26AS / AIS / TIS downloads, GSTR-2B reconciliation, Tally audit) plus the Docward PDF editor and TallyDrop. Free during early access.',
+    title: 'CAtool: 26AS Downloader, GST Reconciliation & Tally Audit',
+    description: 'Windows software for CA firms: bulk 26AS, AIS and TIS downloads, GSTR-2B reconciliation and Tally audit. Explore CAtool, Docward and TallyDrop.',
     ogTitle: 'CAtool — desktop tools built by a CA, for CAs',
     home: true,
   },
@@ -61,31 +73,31 @@ export const PAGES = [
     description: 'CAtool and TallyDrop are free during early access — no card, no subscription. Docward is free to use, with a one-time Pro upgrade that removes the watermark.',
   },
   {
-    file: '26as-downloader.html', path: '/26as-downloader',
+    file: '26as-downloader.html', path: '/26as-downloader', app: 'downloader',
     title: '26AS / AIS / TIS Bulk Downloader for CAs — CAtool',
-    description: 'Bulk downloader for Form 26AS, AIS and TIS from the Indian IT e-Filing portal. Per-assessee folders, auto PDF-unlock, partywise + sectionwise Excel, ITR intimation refund + 244A interest.',
+    description: 'Bulk-download Form 26AS, AIS and TIS from the income tax portal. Unlock PDFs and export TDS summaries to Excel. Included in CAtool for Windows.',
   },
   {
-    file: 'gstr2b-recon.html', path: '/gstr2b-recon',
-    title: 'GSTR-2B vs Books Reconciliation — CAtool',
-    description: 'Reconcile GSTR-2B with books of accounts. Smart Excel reader, fuzzy column mapping, 16(4) ITC + Rule 37 + RCM compliance baked in. Free inside CAtool.',
+    file: 'gstr2b-recon.html', path: '/gstr2b-recon', app: 'recon',
+    title: 'GSTR-2B Reconciliation Software for CAs — CAtool',
+    description: 'Reconcile GSTR-2B JSON or Excel with books from Tally, Busy or SAP. Match invoices, review ITC exceptions and export results. Included in CAtool.',
   },
   {
-    file: 'tally-audit.html', path: '/tally-audit',
-    title: 'Tally Audit Dashboard (beta) — CAtool',
+    file: 'tally-audit.html', path: '/tally-audit', app: 'audit',
+    title: 'Tally Audit Software & TDS Reconciliation (Beta) — CAtool',
     description: 'End-to-end audit of live Tally data: trial balance, party ledger matrix, voucher book, variance analysis, P&L and TDS/TCS against 26AS. In beta, free inside CAtool.',
   },
   {
     file: 'docward.html', path: '/docward',
-    title: 'Docward — Acrobat-class PDF editing that never leaves your device',
-    description: 'Docward is a privacy-first desktop PDF editor with built-in OCR. Edit text, redact, recognise scans, add signature images, organise and convert PDFs — 100% on your own PC. Free with a watermark; a one-time upgrade removes it.',
+    title: 'Docward PDF Editor for Windows — OCR & Redaction | CAtool',
+    description: 'Edit, redact, sign and organise PDFs on your PC with Docward for Windows. Built-in OCR for scans. Free with a watermark; a one-time Pro upgrade removes it.',
     cta: { label: 'Get Docward', href: '#pricing' },
     lead: true, app: 'docward',
   },
   {
     file: 'tallydrop/index.html', path: '/tallydrop/',
-    title: 'TallyDrop — open every client\'s Tally data in the right Tally version | CAtool',
-    description: 'TallyDrop tells which Tally release a client\'s data belongs to (TallyPrime 6.2, Edit Log 6.1, Tally.ERP 9 …) and opens it in exactly that version — or gives you the official download. Built by a CA for CA firms. Free during early access.',
+    title: 'TallyDrop — Open Tally Data in the Right Version | CAtool',
+    description: 'Identify the TallyPrime, Edit Log or Tally.ERP 9 release your client data needs. TallyDrop opens the matching version or links to the official download.',
     ogTitle: 'TallyDrop — drop client data, it opens in the right Tally',
     cta: { label: 'Get TallyDrop', href: '#download' },
     lead: true, app: 'tallydrop',

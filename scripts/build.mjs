@@ -39,31 +39,43 @@ function productList() {
 }
 
 function jsonLd(page) {
-  const blocks = [];
-  if (page.home) {
-    blocks.push({
-      '@context': 'https://schema.org', '@type': 'Organization', name: 'CAtool', url: SITE + '/',
+  if (page.noindex) return [];
+  const url = SITE + page.path;
+  const org = SITE + '/#organization';
+  const site = SITE + '/#website';
+  const blocks = [
+    { '@type': 'Organization', '@id': org, name: 'CAtool', url: SITE + '/',
       logo: SITE + '/assets/logo-mark-72.png', email: 'akshaybkn@gmail.com', telephone: '+91-99290-89598',
-      founder: { '@type': 'Person', name: 'CA Akshay Daiya', sameAs: 'https://www.linkedin.com/in/akshaydaiya/' },
-    });
+      founder: { '@type': 'Person', name: 'CA Akshay Daiya', sameAs: 'https://www.linkedin.com/in/akshaydaiya/' } },
+    { '@type': 'WebSite', '@id': site, name: 'CAtool', url: SITE + '/', publisher: { '@id': org }, inLanguage: 'en-IN' },
+    { '@type': page.path === '/contact' ? 'ContactPage' : 'WebPage', '@id': url + '#webpage',
+      url, name: page.title, description: page.description, inLanguage: 'en-IN',
+      isPartOf: { '@id': site }, ...(page.app ? { mainEntity: { '@id': url + '#software' } } : {}) },
+  ];
+  if (!page.home) {
+    blocks[2].breadcrumb = { '@id': url + '#breadcrumb' };
+    blocks.push({ '@type': 'BreadcrumbList', '@id': url + '#breadcrumb', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE + '/' },
+      { '@type': 'ListItem', position: 2, name: page.app ? APPS[page.app].name : page.title.split(' — ')[0], item: url },
+    ] });
   }
   if (page.app) {
     const app = APPS[page.app];
-    blocks.push({
-      '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: app.name, description: app.description,
-      url: SITE + app.url, applicationCategory: 'BusinessApplication', operatingSystem: 'Windows 10, Windows 11',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
-      author: { '@type': 'Person', name: 'CA Akshay Daiya' },
-    });
+    blocks.push({ '@type': 'SoftwareApplication', '@id': url + '#software', name: app.name,
+      description: app.description, url: SITE + app.url, applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Windows 10, Windows 11', offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', url: SITE + app.url },
+      author: { '@type': 'Person', name: 'CA Akshay Daiya', sameAs: 'https://www.linkedin.com/in/akshaydaiya/' },
+      publisher: { '@id': org }, isAccessibleForFree: true });
   }
-  return blocks.map((b) => `  <script type="application/ld+json">${JSON.stringify(b).replace(/</g, '\\u003c')}</script>`);
+  const graph = { '@context': 'https://schema.org', '@graph': blocks };
+  return [`  <script type="application/ld+json">${JSON.stringify(graph).replace(/</g, '\\u003c')}</script>`];
 }
 
 const GA_ID = 'G-S4NBSRVDQ0';
 
 function headBlock(page) {
   const url = SITE + page.path;
-  const image = SITE + (page.image || '/assets/logo-full.png');
+  const image = SITE + (page.image || '/assets/logo-mark.png');
   const ogTitle = page.ogTitle || page.title;
   const lines = [
     '<meta charset="utf-8" />',
@@ -73,15 +85,21 @@ function headBlock(page) {
     `<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_ID}');</script>`,
     `<title>${esc(page.title)}</title>`,
     `<meta name="description" content="${esc(page.description)}" />`,
-    page.noindex ? '<meta name="robots" content="noindex" />' : null,
+    page.noindex ? '<meta name="robots" content="noindex, follow" />' : '<meta name="robots" content="max-image-preview:large" />',
     `<link rel="canonical" href="${esc(url)}" />`,
     '<link rel="icon" href="/assets/favicon.png" type="image/png" /><link rel="icon" href="/assets/favicon.ico" sizes="any" />',
     '<meta property="og:type" content="website" />',
+    '<meta property="og:locale" content="en_IN" />',
     '<meta property="og:site_name" content="catool.co.in" />',
     `<meta property="og:url" content="${esc(url)}" />`,
     `<meta property="og:title" content="${esc(ogTitle)}" />`,
     `<meta property="og:description" content="${esc(page.description)}" />`,
     `<meta property="og:image" content="${esc(image)}" />`,
+    `<meta property="og:image:width" content="${page.image ? 1072 : 822}" />`,
+    `<meta property="og:image:height" content="${page.image ? 887 : 822}" />`,
+    `<meta property="og:image:alt" content="${esc(page.image ? 'TallyDrop identifying the Tally release needed for client data' : 'CAtool logo')}" />`,
+    `<meta name="twitter:image" content="${esc(image)}" />`,
+    `<meta name="twitter:image:alt" content="${esc(page.image ? 'TallyDrop identifying the Tally release needed for client data' : 'CAtool logo')}" />`,
     `<meta name="twitter:card" content="${page.image ? 'summary_large_image' : 'summary'}" />`,
     `<meta name="twitter:title" content="${esc(ogTitle)}" />`,
     `<meta name="twitter:description" content="${esc(page.description)}" />`,
@@ -186,6 +204,14 @@ if (!existsSync(sitemapPath) || readFileSync(sitemapPath, 'utf8').replace(/\r\n/
   changed++;
   if (CHECK) console.log('out of date: sitemap.xml');
   else { writeFileSync(sitemapPath, sitemap); console.log('updated sitemap.xml'); }
+}
+
+// Keep flow pages crawlable: crawlers must be able to read their noindex tag.
+const robots = `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`;
+if (read('robots.txt').replace(/\r\n/g, '\n') !== robots) {
+  changed++;
+  if (CHECK) console.log('out of date: robots.txt');
+  else { writeFileSync(join(ROOT, 'robots.txt'), robots); console.log('updated robots.txt'); }
 }
 
 if (CHECK && changed) { console.log(`\n${changed} file(s) out of date — run: node scripts/build.mjs`); process.exit(1); }

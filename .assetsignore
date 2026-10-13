@@ -17,3 +17,6 @@ scripts
 scripts/**
 _layout
 _layout/**
+
+docs
+docs/**

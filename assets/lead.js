@@ -1,6 +1,6 @@
 // Shared download flow for catool.co.in.
 //
-// Any element with data-download="catool" | "docward" | "tallydrop" opens the download form
+// Any element with data-download="catool" | "docward" | "tallydrop" | "thetadesk" | "thetadesk-android" opens the download form
 // (_layout/lead-modal.html). After the form is sent to /api/lead the file downloads. A visitor who
 // has filled the form once isn't asked again on this browser for 180 days.
 // Links keep a real href to the file, so downloads still work if this script doesn't load.
@@ -24,6 +24,18 @@
       source: 'docward',
       fallback: 'https://github.com/DaiyaAkshay/docward-releases/releases/latest/download/Docward-Setup.exe',
       github: { repo: 'DaiyaAkshay/docward-releases', asset: /^Docward-Setup\.exe$/i },
+    },
+    thetadesk: {
+      name: 'ThetaDesk',
+      source: 'thetadesk',
+      fallback: 'https://github.com/DaiyaAkshay/thetadesk-releases/releases/latest/download/ThetaDesk-Setup.exe',
+      github: { repo: 'DaiyaAkshay/thetadesk-releases', asset: /^ThetaDesk-Setup\.exe$/i },
+    },
+    'thetadesk-android': {
+      name: 'ThetaDesk for Android',
+      source: 'thetadesk-android',
+      fallback: 'https://github.com/DaiyaAkshay/thetadesk-releases/releases/latest/download/ThetaDesk.apk',
+      github: { repo: 'DaiyaAkshay/thetadesk-releases', asset: /^ThetaDesk\.apk$/i },
     },
     tallydrop: {
       name: 'TallyDrop',

@@ -66,6 +66,10 @@ export default {
         headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store', ...CORS },
       });
     }
+      // ThetaDesk plans (thetadesk backend/app/licensing.py): the paywall switch and a signed-in user's licence.
+      if (path === '/api/thetadesk/config' && method === 'GET')  return thetadeskConfig(env);
+      if (path === '/api/thetadesk/license' && method === 'GET') return await thetadeskLicense(request, env);
+
       // Docward PDF licensing (Razorpay → signed Ed25519 license).
       if (path === '/api/docward/webhook' && method === 'POST') return await docwardWebhook(request, env);
       if (path === '/api/docward/license' && method === 'GET')  return await docwardGetLicense(request, env);
@@ -264,6 +268,49 @@ async function handleConfig(env) {
     if (raw) cfg = JSON.parse(raw);
   } catch { cfg = {}; }
   return json({ ...CONFIG_DEFAULTS, ...cfg, served_at: new Date().toISOString() }, 200, { ...CORS, 'cache-control': 'no-store' });
+}
+
+// ══ ThetaDesk plans ═══════════════════════════════════════════════════════════
+// Hooks for charging later (owner, 2026-10-17). Nothing is charged while THETADESK_PAYWALL isn't "on".
+//   THETADESK_PAYWALL   "on" to start charging (Cloudflare → Settings → Variables); anything else = off
+//   THETADESK_FREE      comma list of features the free plan keeps when the paywall is on
+//   KV thetadesk:lic:email:<email>   a licence signed with the ThetaDesk vendor key (same format as Docward's)
+function thetadeskConfig(env) {
+  const free = String(env.THETADESK_FREE || 'live_orders,auto_plans,family_accounts,signals').split(',').map((x) => x.trim()).filter(Boolean);
+  return json({ paywall: env.THETADESK_PAYWALL === 'on', free, upgrade_url: 'https://catool.co.in/thetadesk' }, 200,
+    { 'cache-control': 'public, max-age=300' });
+}
+
+// The licence of the Google account signed in to ThetaDesk, proven by its Firebase ID token (so nobody can fetch
+// someone else's by guessing an email address).
+let thetadeskKeys = { at: 0, keys: [] };
+const b64urlBytes = (s) => b64ToBytes(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4));
+async function thetadeskVerifyIdToken(token, env) {
+  const project = env.THETADESK_FIREBASE_PROJECT || 'theta-desk';
+  const [h, p, sig] = String(token).split('.');
+  if (!h || !p || !sig) return null;
+  const header = JSON.parse(new TextDecoder().decode(b64urlBytes(h)));
+  const claims = JSON.parse(new TextDecoder().decode(b64urlBytes(p)));
+  const now = Math.floor(Date.now() / 1000);
+  if (claims.aud !== project || claims.iss !== `https://securetoken.google.com/${project}` || !(claims.exp > now)
+      || claims.email_verified !== true || claims.firebase?.sign_in_provider !== 'google.com') return null;
+  if (Date.now() - thetadeskKeys.at > 3600_000) {
+    const r = await fetch('https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com');
+    thetadeskKeys = { at: Date.now(), keys: (await r.json()).keys || [] };
+  }
+  const jwk = thetadeskKeys.keys.find((k) => k.kid === header.kid);
+  if (!jwk) return null;
+  const key = await crypto.subtle.importKey('jwk', jwk, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
+  const ok = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, b64urlBytes(sig), new TextEncoder().encode(`${h}.${p}`));
+  return ok ? claims : null;
+}
+async function thetadeskLicense(request, env) {
+  const auth = request.headers.get('authorization') || '';
+  const claims = auth.startsWith('Bearer ') ? await thetadeskVerifyIdToken(auth.slice(7), env).catch(() => null) : null;
+  if (!claims) return json({ ok: false, error: 'sign in with Google first' }, 401);
+  const email = String(claims.email || '').toLowerCase();
+  const lic = env.CATOOL_KV ? await env.CATOOL_KV.get(`thetadesk:lic:email:${email}`) : null;
+  return json({ ok: true, license: lic ? JSON.parse(lic) : null }, 200, { 'cache-control': 'no-store' });
 }
 
 // ══ Docward PDF licensing ════════════════════════════════════════════════════

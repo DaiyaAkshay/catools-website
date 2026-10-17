@@ -24,6 +24,11 @@ export const APPS = {
     description: 'Privacy-first PDF editor with OCR and true redaction that works 100% on your own PC.',
     url: '/docward',
   },
+  thetadesk: {
+    name: 'ThetaDesk',
+    description: 'Defined-risk option trading on your own broker account: market regime, sizing, stops, kill switch, paper and live trading. Windows and Android.',
+    url: '/thetadesk',
+  },
   tallydrop: {
     name: 'TallyDrop',
     description: 'Opens every client\'s Tally data in the exact Tally release it belongs to, or gets you the official download.',
@@ -39,6 +44,7 @@ export const PRODUCT_LINKS = [
   { label: 'Tally Audit (beta)', href: '/tally-audit', group: 'CAtool hub' },
   { label: 'Docward — PDF editor', href: '/docward', group: 'Standalone apps' },
   { label: 'TallyDrop — right Tally, every time', href: '/tallydrop/', group: 'Standalone apps' },
+  { label: 'ThetaDesk — option trading', href: '/thetadesk', group: 'Standalone apps' },
 ];
 
 export const PAGES = [
@@ -81,6 +87,15 @@ export const PAGES = [
     description: 'Docward is a privacy-first desktop PDF editor with built-in OCR. Edit text, redact, recognise scans, add signature images, organise and convert PDFs — 100% on your own PC. Free with a watermark; a one-time upgrade removes it.',
     cta: { label: 'Get Docward', href: '#pricing' },
     lead: true, app: 'docward',
+  },
+  {
+    file: 'thetadesk.html', path: '/thetadesk',
+    title: 'ThetaDesk — defined-risk option trading on your own broker account (Windows and Android)',
+    description: 'ThetaDesk plans, sizes and places NIFTY and SENSEX option strategies with stops, a daily loss limit and a kill switch, through your own broker\'s official API. Paper trading built in. Free during early access.',
+    ogTitle: 'ThetaDesk — disciplined option selling, on your own broker account',
+    cta: { label: 'Get ThetaDesk', href: '#download' },
+    lead: true, app: 'thetadesk',
+    image: '/thetadesk/home-phone.jpg',
   },
   {
     file: 'tallydrop/index.html', path: '/tallydrop/',

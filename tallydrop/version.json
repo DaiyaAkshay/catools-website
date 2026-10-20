@@ -1,9 +1,9 @@
 {
   "product": "TallyDrop",
-  "latest": "1.0.2",
+  "latest": "1.0.3",
   "page": "https://catool.co.in/tallydrop/",
   "download": "https://catool.co.in/tallydrop/TallyDrop.exe",
-  "notes": "Opens client data kept on a server or network share whose path has spaces. Also fixes Tally opening on the company list instead of the dropped company, and repairs the \"Application settings are lost\" message caused by 1.0.0. Please update.",
+  "notes": "Other CAtool apps, such as GSTR-9 Desk, can now ask TallyDrop to open a client's company in the exact Tally release it belongs to. Dropping data on TallyDrop works as before. Includes the 1.0.1 and 1.0.2 fixes: client data on network shares whose path has spaces, Tally opening on the company list, and the \"Application settings are lost\" message caused by 1.0.0.",
   "announcement": "",
   "announcementUrl": "",
   "tallyReleases": [
